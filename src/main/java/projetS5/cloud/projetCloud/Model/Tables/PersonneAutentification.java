@@ -191,6 +191,53 @@ public class PersonneAutentification extends Personne{
 
         return id;
     }
+
+    public String create(Connection connection) throws Exception{
+        String query = "INSERT INTO personne_autentification (email, mot_passe, is_admin, personne_id) VALUES ( ?, ?, ?, ? );";
+        String id = "";
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        boolean statementOpen = false;
+        boolean resultSetOpen = false;
+        boolean closeable = false;
+
+        try {
+            if (connection == null) {
+                connection = ConnectionPostgres.connectDefault();
+                connection.setAutoCommit(false);
+                closeable = true;
+            }
+
+            statement = connection.prepareStatement(query);
+            statement.setString(1, this.getEmail());
+            statement.setString(2, this.getMotPasse());
+            statement.setBoolean(3, this.getAdmin());
+            statement.setString(4,this.getPersonneId());
+
+            statementOpen = true;
+            statement.executeUpdate();
+
+         
+
+            statement.close();
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (statementOpen) {
+                statement.close();
+            }
+            if (resultSetOpen) {
+                resultSet.close();
+            }
+            if (closeable) {
+                connection.commit();
+                connection.close();
+            }
+        }
+
+        return id;
+    }
+
     public void delete(Connection connection) throws SQLException {
 
     }

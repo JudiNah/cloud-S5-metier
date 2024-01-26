@@ -1,6 +1,8 @@
 package projetS5.cloud.projetCloud.Model.Tables;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.Period;
 
 public class Personne {
     String id;
@@ -90,14 +92,27 @@ public class Personne {
 
     }
 
+    public static int calculerAge(Date dateDeNaissance) {
+        if (dateDeNaissance == null) {
+            throw new IllegalArgumentException("La date de naissance ne peut pas être null");
+        }
+
+        LocalDate dateDeNaissanceLocale = dateDeNaissance.toLocalDate();
+        LocalDate aujourdHui = LocalDate.now();
+        Period difference = Period.between(dateDeNaissanceLocale, aujourdHui);
+
+        return difference.getYears();
+    }
+
     public String create (Connection connection) throws Exception {
-        String sql = "INSERT INTO personne(nom, prenom, address, date_naissance, telephone, sexe) VALUES (?, ?, ?, ?, ?) RETURNING id";
+        String sql = "INSERT INTO personne( nom, prenom, age, sexe, telephone, address) VALUES ( ?, ?, ?, ?, ?, ?) RETURNING id";
         try (PreparedStatement prstmt = connection.prepareStatement(sql)){
             prstmt.setString(1, getNom());
             prstmt.setString(2, getPrenom());
-            prstmt.setString(3, getAddress());
-            prstmt.setDate(4, getDateNaissance());
-            prstmt.setInt(5, getSexe());
+            prstmt.setInt(3, calculerAge(getDateNaissance()));
+            prstmt.setInt(4, getSexe());
+            prstmt.setString(6, getAddress());
+            prstmt.setString(5, getTelephone());
 
             try (ResultSet rs = prstmt.executeQuery()){
                 if (rs.next()) {

@@ -88,7 +88,12 @@ public class LoginController {
             if (!personne.authentificationAdminVerification(null)) {
                 throw new Exception("Email et mot de pass incorrect");
             }else{
-                
+                String idAdmin = personne.getIdAdminByEmailAndPassword(null);
+                String token = Jwts.builder()
+                        .setSubject(idAdmin)
+                        .signWith(SignatureAlgorithm.HS256, "vaikanet") // Remplacez "votre-cle-secrete" par une clé secrète réelle
+                        .compact();
+                resultat.put("tknidadmin", token);
             }
             status = 200;
             titre = "S'authentification VaikaNet";

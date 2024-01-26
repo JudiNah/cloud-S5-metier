@@ -9,8 +9,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import projetS5.cloud.projetCloud.Model.DatabaseConnection.ConnectionPostgres;
 import projetS5.cloud.projetCloud.Model.Entities.Admin;
 import projetS5.cloud.projetCloud.Model.Objects.Client;
+import projetS5.cloud.projetCloud.Model.Tables.Personne;
+import projetS5.cloud.projetCloud.Model.Tables.PersonneAutentification;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -140,4 +143,100 @@ public class ClientController {
     
         return resultat;
     }
+
+    /*---------------------------------------------------------- */
+    @PostMapping("/client")
+    public Map<String, Object> createClient(@RequestBody Map<String, Object> requestBody) throws Exception{
+        Map<String, Object> resultat = new HashMap<>();
+        int status = 0;
+        String titre = null;
+        String message = null;
+        Map<String, Object> data = new HashMap<>();
+        Vector<String> donnes = new Vector<>();
+        Connection connection = null;
+        try {
+            // authentification
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
+            String email = getStringFromRequestBody(requestBody, "email");
+            String password = getStringFromRequestBody(requestBody, "password");
+            boolean isAdmin = false;
+            // personne
+            String nom = getStringFromRequestBody(requestBody, "nom");
+            String prenom = getStringFromRequestBody(requestBody, "prenom");
+            String address = getStringFromRequestBody(requestBody, "address");
+            String telephone = getStringFromRequestBody(requestBody, "telephone");
+            int sexe = getIntFromRequestBody(requestBody, "sexe");
+            String dateNaissance = getStringFromRequestBody(requestBody, "dateNaissance");
+            data.put("email", email);
+            data.put("password", password);
+            data.put("nom", nom);
+            data.put("prenom", prenom);
+            data.put("address", address);
+            data.put("telephone", telephone);
+            data.put("sexe", sexe);
+            data.put("dateNaissance", dateNaissance);
+
+            Personne personne = new Personne();
+            personne.setNom(nom);
+            personne.setPrenom(prenom);
+            personne.setSexe(sexe);
+            personne.setTelephone(telephone);
+            personne.setAddress(address);
+            if (Date.valueOf(dateNaissance) == null) {
+                throw new Exception("Date de naissance invalide");
+            }
+            personne.setDateNaissance(Date.valueOf(dateNaissance));
+            
+            String idPersonne = personne.create(connection);
+            PersonneAutentification personneAutentification = new PersonneAutentification(null, email, password, isAdmin, personne);
+            personneAutentification.setPersonneId(idPersonne);
+            personneAutentification.create(connection);
+            
+
+
+            status = 200;
+            titre = "Creation de nouvelle utilisateur du VaikaNet";
+            message = "Bravo , vous avez creer une nouvelle compte";
+        } catch (Exception e) {
+            status = 500;
+            titre = "Creation d'utilisateur a échoué";
+            e.printStackTrace();
+            message = e.getMessage();
+        } finally {
+            if (connection!=null) {
+                connection.commit();
+                connection.close();
+            }
+            resultat.put("data", data);
+            resultat.put("status", status);
+                resultat.put("titre", titre);
+                resultat.put("message", message);
+        }
+
+        return resultat;
+    }
+
+    private String getStringFromRequestBody(Map<String, Object> requestBody, String key) throws Exception {
+        String value = (String) requestBody.get(key);
+        if (value == null || value.trim().isEmpty()) {
+            throw new Exception(key + " invalide");
+        }
+        return value.trim();
+    }
+
+    private int getIntFromRequestBody(Map<String, Object> requestBody, String key) throws Exception {
+        Object value = requestBody.get(key);
+        if (value instanceof Integer) {
+            int number = (int) value;
+            if (number>=0) {
+                return number;
+            }else{
+                throw new Exception(key + " invalide");
+            }
+        } else {
+            throw new Exception(key + " invalide");
+        }
+    }
+
 }
