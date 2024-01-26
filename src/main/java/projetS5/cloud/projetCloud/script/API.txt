@@ -6,7 +6,10 @@
                 "email":"vaikanet@admin.mg",
                 "password":"vaikanet"
              }
-
+             
+2 .liste des elements necessaire
+    . url : /elementNecessaire
+    . method : get
 
 ------------ CLIENT ----------------------
 1 .creation compte client

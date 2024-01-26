@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 public class VoitureController {
-    @GetMapping("element_necessaire")
+    @GetMapping("elementNecessaire")
     public Map<String, Object> element_necessaire() {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
