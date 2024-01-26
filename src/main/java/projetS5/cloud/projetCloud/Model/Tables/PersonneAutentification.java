@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import projetS5.cloud.projetCloud.Model.DatabaseConnection.ConnectionPostgres;
+
 public class PersonneAutentification extends Personne{
     String id;
     String email;
@@ -99,6 +101,96 @@ public class PersonneAutentification extends Personne{
         return prsauths;
     }
 
+    public boolean authentificationAdminVerification(Connection connection) throws Exception{
+        String query = "select * from personne_autentification where is_admin='t' and email=? and mot_passe=?";
+        boolean isExist = false;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        boolean statementOpen = false;
+        boolean resultSetOpen = false;
+        boolean closeable = false;
+
+        try {
+            if (connection == null) {
+                connection = ConnectionPostgres.connectDefault();
+                connection.setAutoCommit(false);
+                closeable = true;
+            }
+
+            statement = connection.prepareStatement(query);
+            statement.setString(1, this.getEmail());
+            statement.setString(2, this.getMotPasse());
+
+            statementOpen = true;
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+               isExist = true;
+            }
+
+            statement.close();
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (statementOpen) {
+                statement.close();
+            }
+            if (resultSetOpen) {
+                resultSet.close();
+            }
+            if (closeable) {
+                connection.commit();
+                connection.close();
+            }
+        }
+
+        return isExist;
+    }
+    public String getIdAdminByEmailAndPassword(Connection connection) throws Exception{
+        String query = "select id from personne_autentification where is_admin='t' and email=? and mot_passe=?";
+        String id = "";
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        boolean statementOpen = false;
+        boolean resultSetOpen = false;
+        boolean closeable = false;
+
+        try {
+            if (connection == null) {
+                connection = ConnectionPostgres.connectDefault();
+                connection.setAutoCommit(false);
+                closeable = true;
+            }
+
+            statement = connection.prepareStatement(query);
+            statement.setString(1, this.getEmail());
+            statement.setString(2, this.getMotPasse());
+
+            statementOpen = true;
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+               id = resultSet.getString("id");
+            }
+
+            statement.close();
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (statementOpen) {
+                statement.close();
+            }
+            if (resultSetOpen) {
+                resultSet.close();
+            }
+            if (closeable) {
+                connection.commit();
+                connection.close();
+            }
+        }
+
+        return id;
+    }
     public void delete(Connection connection) throws SQLException {
 
     }

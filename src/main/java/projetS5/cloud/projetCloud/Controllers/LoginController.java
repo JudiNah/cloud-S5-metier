@@ -14,6 +14,7 @@ import projetS5.cloud.projetCloud.Context.PgsqlContext;
 import projetS5.cloud.projetCloud.Model.Bag;
 import projetS5.cloud.projetCloud.Model.Entities.Admin;
 import projetS5.cloud.projetCloud.Model.JsonDataObjects.Login;
+import projetS5.cloud.projetCloud.Model.Tables.PersonneAutentification;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -54,6 +55,44 @@ public class LoginController {
             } else {
                 throw new Exception("Nom non valide");
             }
+        } catch (Exception e) {
+            status = 500;
+            titre = "Authentification a échoué";
+            message = e.getMessage();
+        } finally {
+            resultat.put("data", donnes);
+            resultat.put("status", status);
+                resultat.put("titre", titre);
+                resultat.put("message", message);
+        }
+
+        return resultat;
+    }
+
+    
+    @PostMapping("/authentificationAdmin")
+    public Map<String, Object> authentificationAdmin(@RequestBody Map<String, Object> requestBody) {
+        Map<String, Object> resultat = new HashMap<>();
+        int status = 0;
+        String titre = null;
+        String message = null;
+        Map<String, Object> data = new HashMap<>();
+        Vector<String> donnes = new Vector<>();
+
+        try {
+            String email = (String) requestBody.get("email");
+            String password = ((String) requestBody.get("password"));
+            donnes.add(email);
+            donnes.add(password);
+            PersonneAutentification personne  = new PersonneAutentification(null, email, password, null, null);
+            if (!personne.authentificationAdminVerification(null)) {
+                throw new Exception("Email et mot de pass incorrect");
+            }else{
+                
+            }
+            status = 200;
+            titre = "S'authentification VaikaNet";
+            message = "Vous êtes le bienvenu sur le projet";
         } catch (Exception e) {
             status = 500;
             titre = "Authentification a échoué";
