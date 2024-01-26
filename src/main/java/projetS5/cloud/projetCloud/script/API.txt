@@ -9,3 +9,15 @@
 
 
 ------------ CLIENT ----------------------
+    . url : /client
+    . method : post
+    . data : {
+                "email": "judi@email.com",
+                "password": "judimdp",
+                "nom": "Judi",
+                "prenom": "Cael",
+                "address": "Iavoloha",
+                "telephone": "0323456787",
+                "sexe": 1,  
+                "dateNaissance": "2003-01-26"
+            }
