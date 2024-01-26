@@ -9,6 +9,7 @@
 
 
 ------------ CLIENT ----------------------
+1 .creation compte client
     . url : /client
     . method : post
     . data : {
@@ -21,3 +22,12 @@
                 "sexe": 1,  
                 "dateNaissance": "2003-01-26"
             }
+
+2 .login client
+    . url : /loginClient
+    . method : post
+    . data : {
+                "email":"judi@email.com",
+                "password":"judimdp"
+            }
+

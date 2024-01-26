@@ -93,14 +93,56 @@ public class LoginController {
                         .setSubject(idAdmin)
                         .signWith(SignatureAlgorithm.HS256, "vaikanet") // Remplacez "votre-cle-secrete" par une clé secrète réelle
                         .compact();
-                resultat.put("tknidadmin", token);
+                resultat.put("tknidclient", token);
             }
             status = 200;
             titre = "S'authentification VaikaNet";
-            message = "Vous êtes le bienvenu sur le projet";
+            message = "Vous êtes le bienvenu sur le admin de VaikaNet";
         } catch (Exception e) {
             status = 500;
             titre = "Authentification a échoué";
+            message = e.getMessage();
+        } finally {
+            resultat.put("data", donnes);
+            resultat.put("status", status);
+                resultat.put("titre", titre);
+                resultat.put("message", message);
+        }
+
+        return resultat;
+    }
+
+    @PostMapping("/loginClient")
+    public Map<String, Object> loginClient(@RequestBody Map<String, Object> requestBody) {
+        Map<String, Object> resultat = new HashMap<>();
+        int status = 0;
+        String titre = null;
+        String message = null;
+        Map<String, Object> data = new HashMap<>();
+        Vector<String> donnes = new Vector<>();
+
+        try {
+            String email = (String) requestBody.get("email");
+            String password = ((String) requestBody.get("password"));
+            donnes.add(email);
+            donnes.add(password);
+            PersonneAutentification personne  = new PersonneAutentification(null, email, password, null, null);
+            if (!personne.authentificationClientVerification(null)) {
+                throw new Exception("Email et mot de pass incorrect");
+            }else{
+                String idAdmin = personne.getIdClientByEmailAndPassword(null);
+                String token = Jwts.builder()
+                        .setSubject(idAdmin)
+                        .signWith(SignatureAlgorithm.HS256, "vaikanet") 
+                        .compact();
+                resultat.put("tknidadmin", token);
+            }
+            status = 200;
+            titre = "Connection de client VaikaNet reussi";
+            message = "Vous êtes le bienvenu sur client de VaikaNet";
+        } catch (Exception e) {
+            status = 500;
+            titre = "Connection de client a échoué";
             message = e.getMessage();
         } finally {
             resultat.put("data", donnes);
