@@ -17,6 +17,7 @@ import projetS5.cloud.projetCloud.Model.JsonDataObjects.Login;
 import projetS5.cloud.projetCloud.Model.Tables.PersonneAutentification;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +39,7 @@ public class LoginController {
             String name = (String) requestBody.get("name");
             donnes.add(name);
             donnes.add((String) requestBody.get("password"));
+            Date expirationDate = new Date(System.currentTimeMillis() + 2 * 24 * 60 * 60 * 1000);
 
             if ("judi".equalsIgnoreCase(name)) {
                 // Générer un token JWT
@@ -46,6 +48,7 @@ public class LoginController {
                 message = "Vous êtes le bienvenu sur le projet";
                 String token = Jwts.builder()
                         .setSubject(name)
+                        .setExpiration(expirationDate)
                         .signWith(SignatureAlgorithm.HS256, "votre-cle-secrete") // Remplacez "votre-cle-secrete" par une clé secrète réelle
                         .compact();
                 System.out.println("ok");
@@ -89,8 +92,11 @@ public class LoginController {
                 throw new Exception("Email et mot de pass incorrect");
             }else{
                 String idAdmin = personne.getIdAdminByEmailAndPassword(null);
+                Date expirationDate = new Date(System.currentTimeMillis() + 2 * 24 * 60 * 60 * 1000);
+            
                 String token = Jwts.builder()
                         .setSubject(idAdmin)
+                        .setExpiration(expirationDate)
                         .signWith(SignatureAlgorithm.HS256, "vaikanet") // Remplacez "votre-cle-secrete" par une clé secrète réelle
                         .compact();
                 resultat.put("tknidclient", token);
@@ -131,8 +137,11 @@ public class LoginController {
                 throw new Exception("Email et mot de pass incorrect");
             }else{
                 String idAdmin = personne.getIdClientByEmailAndPassword(null);
+                Date expirationDate = new Date(System.currentTimeMillis() + 2 * 24 * 60 * 60 * 1000);
+
                 String token = Jwts.builder()
                         .setSubject(idAdmin)
+                        .setExpiration(expirationDate)
                         .signWith(SignatureAlgorithm.HS256, "vaikanet") 
                         .compact();
                 resultat.put("tknidadmin", token);

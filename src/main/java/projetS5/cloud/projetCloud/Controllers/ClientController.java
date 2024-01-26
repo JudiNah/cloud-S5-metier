@@ -104,14 +104,19 @@ public class ClientController {
             client.connect(connection);
 
             // si le connection est reussi
+            String secretKey = "projetclouds5";
+
+            // Définir la date d'expiration à 2 jours à partir de maintenant
+            Date expirationDate = new Date(System.currentTimeMillis() + 2 * 24 * 60 * 60 * 1000);
+
             String token = Jwts.builder()
-                .setSubject("tokentheclient")
-                .claim("name", client.getName())
-                .claim("password", client.getPassword())
-                .claim("idClient", client.getIdClient())
-                .signWith(SignatureAlgorithm.HS256, "projetclouds5") // "votre-cle-secrete" 
-                .compact();
-                
+                    .setSubject("tokentheclient")
+                    .claim("name", client.getName())
+                    .claim("password", client.getPassword())
+                    .claim("idClient", client.getIdClient())
+                    .setExpiration(expirationDate)
+                    .signWith(SignatureAlgorithm.HS256, secretKey)
+                    .compact();
                 resultat.put("token", token);
             // PRENDRE LE TOKEN
             // Claims claims = Jwts.parser()
