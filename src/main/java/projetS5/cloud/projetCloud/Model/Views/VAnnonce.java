@@ -153,7 +153,6 @@ public class VAnnonce {
     }
     public List<VAnnonce> getAnnoncesNotValidees(Connection connection) throws Exception {
         List<VAnnonce> annonceValideeList = new ArrayList<>();
-
         String sql = "SELECT * FROM v_annonce WHERE date_validation is null and date_fin is null ";
         try (Statement prstmt = connection.createStatement()) {
 
