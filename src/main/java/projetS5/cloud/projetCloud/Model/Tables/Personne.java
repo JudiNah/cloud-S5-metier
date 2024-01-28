@@ -105,11 +105,11 @@ public class Personne {
     }
 
     public String create (Connection connection) throws Exception {
-        String sql = "INSERT INTO personne( nom, prenom, age, sexe, telephone, address) VALUES ( ?, ?, ?, ?, ?, ?) RETURNING id";
+        String sql = "INSERT INTO personne( nom, prenom, date_naissance, sexe, telephone, address) VALUES ( ?, ?, ?, ?, ?, ?) RETURNING id";
         try (PreparedStatement prstmt = connection.prepareStatement(sql)){
             prstmt.setString(1, getNom());
             prstmt.setString(2, getPrenom());
-            prstmt.setInt(3, calculerAge(getDateNaissance()));
+            prstmt.setDate(3, getDateNaissance());
             prstmt.setInt(4, getSexe());
             prstmt.setString(6, getAddress());
             prstmt.setString(5, getTelephone());

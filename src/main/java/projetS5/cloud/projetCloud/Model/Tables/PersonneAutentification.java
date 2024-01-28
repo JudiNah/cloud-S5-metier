@@ -334,6 +334,69 @@ public class PersonneAutentification extends Personne{
 
     }
 
+    
+    public String authentificationByIdAndRole(Connection connection) throws Exception{
+        String query = "select * from personne_autentification where is_admin=? and id=?";
+        String id = "";
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        boolean statementOpen = false;
+        boolean resultSetOpen = false;
+        boolean closeable = false;
+        boolean exist = false;
+        PersonneAutentification prauth = null;
+        try {
+            if (connection == null) {
+                connection = ConnectionPostgres.connectDefault();
+                connection.setAutoCommit(false);
+                closeable = true;
+            }
+
+            statement = connection.prepareStatement(query);
+            statement.setString(2, this.getId());
+            String isAdminString = "f";
+            if (this.getAdmin()) {
+                isAdminString = "t";
+            }
+            statement.setBoolean(1, this.getAdmin());
+
+            statementOpen = true;
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                prauth = new PersonneAutentification(
+                resultSet.getString("id"),
+                resultSet.getString("email"),
+                resultSet.getString("mot_passe"),
+                resultSet.getBoolean("is_admin"),
+                new Personne().getPersonne(connection, resultSet.getString("personne_id"))
+            );
+            exist = true;
+            }
+            if (!exist) {
+                throw new Exception("Personne invalide");
+            }
+
+            statement.close();
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (statementOpen) {
+                statement.close();
+            }
+            if (resultSetOpen) {
+                resultSet.close();
+            }
+            if (closeable) {
+                connection.commit();
+                connection.close();
+            }
+        }
+
+        return id;
+    }
+
+
 
 
 }

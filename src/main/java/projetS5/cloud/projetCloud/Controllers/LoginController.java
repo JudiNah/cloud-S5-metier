@@ -15,6 +15,7 @@ import projetS5.cloud.projetCloud.Model.Bag;
 import projetS5.cloud.projetCloud.Model.Entities.Admin;
 import projetS5.cloud.projetCloud.Model.JsonDataObjects.Login;
 import projetS5.cloud.projetCloud.Model.Tables.PersonneAutentification;
+import projetS5.cloud.projetCloud.Model.Utils.JwtToken;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -93,12 +94,8 @@ public class LoginController {
             }else{
                 String idAdmin = personne.getIdAdminByEmailAndPassword(null);
                 Date expirationDate = new Date(System.currentTimeMillis() + 2 * 24 * 60 * 60 * 1000);
-            
-                String token = Jwts.builder()
-                        .setSubject(idAdmin)
-                        .setExpiration(expirationDate)
-                        .signWith(SignatureAlgorithm.HS256, "vaikanet") // Remplacez "votre-cle-secrete" par une clé secrète réelle
-                        .compact();
+                JwtToken jwtToken = new JwtToken();
+                String token = jwtToken.create(idAdmin, "admin");
                 resultat.put("tknidclient", token);
             }
             status = 200;

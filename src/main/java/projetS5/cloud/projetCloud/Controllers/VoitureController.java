@@ -6,9 +6,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.http.HttpHeaders;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import projetS5.cloud.projetCloud.Context.PgConnection;
@@ -16,6 +17,7 @@ import projetS5.cloud.projetCloud.Model.Bag;
 import projetS5.cloud.projetCloud.Model.DatabaseConnection.ConnectionPostgres;
 import projetS5.cloud.projetCloud.Model.Objects.Client;
 import projetS5.cloud.projetCloud.Model.Tables.*;
+import projetS5.cloud.projetCloud.Model.Utils.JwtToken;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -30,13 +32,21 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RestController
 public class VoitureController {
     @GetMapping("elementNecessaire")
-    public Map<String, Object> element_necessaire() {
+    public Map<String, Object> element_necessaire(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+        // System.out.println(authorizationHeader);
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
         Map<String, Object> donnes = new HashMap<>();
         Vector donne = new Vector();
+        try {
+        JwtToken jwtToken = new JwtToken();
+        String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+        PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+        personneAutentification.setAdmin(true);
+        personneAutentification.authentificationByIdAndRole(null);
+        System.out.println(idAdmin);
         donne.add("categories");
         donne.add("marques");
         donne.add("types-carburant");
@@ -44,7 +54,6 @@ public class VoitureController {
         donne.add("freinages");
         donne.add("equipements-internes");
           
-        try {
            
             status = 200;
             titre = "Prendre les elements necessaire a reussi";

@@ -6,11 +6,10 @@
                 "email":"vaikanet@admin.mg",
                 "password":"vaikanet"
              }
-             
 2 .liste des elements necessaire
     . url : /elementNecessaire
     . method : get
-
+    . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NTkxMzcyfQ.4TRZnNOuymwbVqi4gCphVTehhpxfxkq5ALACeTkrpYc
 ------------ CLIENT ----------------------
 1 .creation compte client
     . url : /client
