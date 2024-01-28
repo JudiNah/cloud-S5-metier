@@ -107,15 +107,57 @@ public class AnnonceController {
 
 
     @GetMapping("annonce_valides")
-    public Map<String, Object> getAllAnnonceValide() {
+    public Map<String, Object> getAllAnnonceValide(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
         List<VAnnonce> allAnnoncesValides = null;
         try {
+            Connection connection = ConnectionPostgres.connectDefault();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "all");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(null);
+            personneAutentification.authentificationByIdAndRole(connection);
+
             VAnnonce annoncesV = new VAnnonce();
             allAnnoncesValides = annoncesV.getAnnoncesValidees(PgConnection.connect());
+            status = 200;
+            titre = "Prendre tout les validations est fait avec succees";
+            message = "Excellent , voici tout les annonces valides";
+        } catch (Exception e) {
+            status = 500;
+            titre = "Prendre les annonces valides a echoue";
+            message = e.getMessage();
+            e.printStackTrace();
+        } finally {
+            resultat.put("annoces", allAnnoncesValides);
+            resultat.put("status", status);
+                resultat.put("titre", titre);
+                resultat.put("message", message);
+        }
+    
+        return resultat;
+    }
+
+    @GetMapping("annonce_personne_valides/{id_personne}")
+    public Map<String, Object> getAllAnnonceValideByIdClient(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id_personne) {
+        Map<String, Object> resultat = new HashMap<>();
+        int status = 0;
+        String titre = null;
+        String message = null;
+        List<VAnnonce> allAnnoncesValides = null;
+        try {
+            Connection connection = ConnectionPostgres.connectDefault();
+            JwtToken jwtToken = new JwtToken();
+            String id = jwtToken.checkBearer(authorizationHeader, "all");
+            PersonneAutentification personneAutentification = new PersonneAutentification(id);
+            personneAutentification.setAdmin(null);
+            personneAutentification.authentificationByIdAndRole(connection); 
+
+            VAnnonce annoncesV = new VAnnonce();
+            allAnnoncesValides = annoncesV.getAnnoncesValideesByIdPersonne(id_personne,PgConnection.connect());
             status = 200;
             titre = "Prendre tout les validations est fait avec succees";
             message = "Excellent , voici tout les annonces valides";

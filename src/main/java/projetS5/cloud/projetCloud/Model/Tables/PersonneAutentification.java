@@ -336,7 +336,10 @@ public class PersonneAutentification extends Personne{
 
     
     public String authentificationByIdAndRole(Connection connection) throws Exception{
-        String query = "select * from personne_autentification where is_admin=? and id=?";
+        String query = "select * from personne_autentification where id=? and is_admin=?";
+        if (this.getAdmin()==null) {
+             query = "select * from personne_autentification where id=?";
+        }
         String id = "";
         PreparedStatement statement = null;
         ResultSet resultSet = null;
@@ -353,12 +356,14 @@ public class PersonneAutentification extends Personne{
             }
 
             statement = connection.prepareStatement(query);
-            statement.setString(2, this.getId());
+            statement.setString(1, this.getId());
             String isAdminString = "f";
+            if (this.getAdmin()!=null) {
+
             if (this.getAdmin()) {
                 isAdminString = "t";
             }
-            statement.setBoolean(1, this.getAdmin());
+            statement.setBoolean(2, this.getAdmin());  }
 
             statementOpen = true;
             resultSet = statement.executeQuery();

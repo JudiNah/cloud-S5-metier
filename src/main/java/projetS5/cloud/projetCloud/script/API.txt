@@ -128,9 +128,13 @@
 
 4 .Liste annonce
     . non valides : /annonce_not_valides
+    . valides : /annonce_valides (admin et client)
+    . valider par id client : /annonce_personne_valides/PER_AT0001 (admin et client)
+
     . method : get
     . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0b2tlblZhaWthTmV0Iiwicm9sZSI6ImFkbWluIiwiaWQiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NjEzNjI2fQ.MksxFJ0FZAWeallqPoE3h7_mUcbD3q4cbt2RvGM3GnQ
 
+    
 5 .Valider annonce
     . url : /annonce_valide
     . method : post
@@ -138,6 +142,7 @@
     . data : {
                 "id_annonce":"ANNC0005"
             }
+
 ------------ CLIENT ----------------------
 1 .creation compte client
     . url : /client
