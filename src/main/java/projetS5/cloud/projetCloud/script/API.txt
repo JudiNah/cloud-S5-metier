@@ -50,9 +50,9 @@
                             "nom":"new type carburant"
                         }
             - transmissions
-                . url : /transmissions
+                . url : /transmission
                 . data : {
-
+                            "nom":"new transmission tk"
                         }
             - freinages
                 . url : /freinages
@@ -84,6 +84,11 @@
                 . url : /type-carburant/TYPE_CAR0006
                 . data : {
                             "nom":"old type carburant"
+                        }
+            - type carburant 
+                . url : /transmission/TRSM0006
+                . data : {
+                            "nom":"old transmission"
                         }
 
 
