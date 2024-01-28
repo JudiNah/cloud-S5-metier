@@ -203,5 +203,30 @@ public class Commission {
 
         return commission;
     }
+
+    public void update(Connection connection) throws Exception {
+        String sql = "UPDATE commission SET prix_min = ?, prix_max = ?, taux_commission = ?, date = ? WHERE id = ?";
+        try (PreparedStatement prstmt = connection.prepareStatement(sql)) {
+            if (connection == null) {
+                connection = ConnectionPostgres.connectDefault();
+                connection.setAutoCommit(false);
+            }
+            prstmt.setDouble(1, getPrixMin());
+            prstmt.setDouble(2, getPrixMax());
+            prstmt.setDouble(3, getTauxCommission());
+            prstmt.setDate(4, getDate());
+            prstmt.setString(5, getId());
+
+            prstmt.executeUpdate();
+        }
+        catch (Exception e) {
+            throw e;
+        }
+        finally {
+            if (!connection.isClosed() && connection != null) {
+                connection.isClosed();
+            }
+        }
+    }
 }
 
