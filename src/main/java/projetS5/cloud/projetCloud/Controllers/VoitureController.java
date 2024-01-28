@@ -127,7 +127,7 @@ public class VoitureController {
         return bag;
     }
 
-    @GetMapping("types-carburant")
+    @GetMapping("types-carburant") 
     public Bag ListeTypesCarburantsVoiture(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,Model model) throws Exception {
         Connection connection = null;
         Bag bag = new Bag(null, null, null);
@@ -178,7 +178,7 @@ public class VoitureController {
     }
 
 
-    @GetMapping("freinages")
+    @GetMapping("freinages") 
     public Bag ListeFreinageVoiture(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,Model model) throws Exception {
         Connection connection = null;
         Bag bag = new Bag(null, null, null);
@@ -203,7 +203,7 @@ public class VoitureController {
         return bag;
     }
 
-    @GetMapping("equipements-internes")
+    @GetMapping("equipements-internes") 
     public Bag ListeEquipemenstInternesVoiture(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,Model model) throws Exception {
         Connection connection = null;
         Bag bag = new Bag(null, null, null);
@@ -230,7 +230,7 @@ public class VoitureController {
 
     // ---------------- CREATE -----------------------------------------------------------
     @PostMapping("/categorie")
-    public Map<String, Object> createCategorie(@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> createCategorie(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
@@ -239,6 +239,12 @@ public class VoitureController {
         Vector<String> donnes = new Vector<>();
     
         try {
+            Connection connection = ConnectionPostgres.connectDefault();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
             String name = (String) requestBody.get("nom");
             String description = (String) requestBody.get("description");
 
@@ -247,7 +253,7 @@ public class VoitureController {
             CategorieVoiture categorieVoiture = new CategorieVoiture();
             categorieVoiture.setNom(name);
             categorieVoiture.setDescription(description);
-            categorieVoiture.create(ConnectionPostgres.connectDefault());
+            categorieVoiture.create(connection);
     
            
             status = 200;

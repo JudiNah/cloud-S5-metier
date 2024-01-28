@@ -15,12 +15,52 @@
         list : 
             - categories
                 . url : /categories
-                . method : get
-                . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NTkxMzcyfQ.4TRZnNOuymwbVqi4gCphVTehhpxfxkq5ALACeTkrpYc
             - marques
                 . url : /marques
-                . method : get
-                . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NTkxMzcyfQ.4TRZnNOuymwbVqi4gCphVTehhpxfxkq5ALACeTkrpYc 
+            - type carburant
+                . url : /types-carburant
+            - transmissions
+                . url : /transmissions
+            - freinages
+                . url : /freinages
+            - equipements internes
+                . url : /equipements-internes
+            
+            . method : get
+            . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NTkxMzcyfQ.4TRZnNOuymwbVqi4gCphVTehhpxfxkq5ALACeTkrpYc
+
+        create :
+            - categories
+                . url : /categories
+                . data : {
+                             "nom":"New categorie",
+                            "description":"New description"
+                        }
+            - marques
+                . url : /marques
+                . data : {
+
+                        }
+            - type carburant
+                . url : /types-carburant
+                . data : {
+
+                        }
+            - transmissions
+                . url : /transmissions
+                . data : {
+
+                        }
+            - freinages
+                . url : /freinages
+                . data : {
+
+                        }
+            - equipements internes
+                . url : /equipements-internes
+            
+            . method : post
+            . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NTkxMzcyfQ.4TRZnNOuymwbVqi4gCphVTehhpxfxkq5ALACeTkrpYc    
 ------------ CLIENT ----------------------
 1 .creation compte client
     . url : /client
