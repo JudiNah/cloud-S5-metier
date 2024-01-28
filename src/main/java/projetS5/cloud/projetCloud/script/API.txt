@@ -39,12 +39,15 @@
             - marques
                 . url : /marques
                 . data : {
-
+                            "nom":"new Marque",
+                            "description":"New description marque",
+                            "dateCreation":"2023-04-05"
                         }
+                        
             - type carburant
                 . url : /types-carburant
                 . data : {
-
+                            "nom":"new type carburant"
                         }
             - transmissions
                 . url : /transmissions
@@ -60,7 +63,43 @@
                 . url : /equipements-internes
             
             . method : post
-            . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NTkxMzcyfQ.4TRZnNOuymwbVqi4gCphVTehhpxfxkq5ALACeTkrpYc    
+            . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NTkxMzcyfQ.4TRZnNOuymwbVqi4gCphVTehhpxfxkq5ALACeTkrpYc   
+
+        update :
+            - categorie 
+                . url : /categorie/CAT0016
+                . data : {
+                            "nom":"New categorie modifiate",
+                            "description":"New description"
+                        }
+                
+            - marque 
+                . url : /marque/MRQ0008
+                . data : {
+                            "nom":"new Marque",
+                            "description":"Old description marque",
+                            "dateCreation":"2023-04-05"
+                        }
+            - type carburant 
+                . url : /type-carburant/TYPE_CAR0006
+                . data : {
+                            "nom":"old type carburant"
+                        }
+
+
+            . method : put
+            . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NTkxMzcyfQ.4TRZnNOuymwbVqi4gCphVTehhpxfxkq5ALACeTkrpYc
+
+         delete :
+            - categorie 
+                . url : /categorie/CAT0016
+            - marque 
+                . url : /marque/MRQ0008   
+            - type carburant 
+                . url : /type-carburant/TYPE_CAR0006
+
+            . method : delete
+            . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NTkxMzcyfQ.4TRZnNOuymwbVqi4gCphVTehhpxfxkq5ALACeTkrpYc
 ------------ CLIENT ----------------------
 1 .creation compte client
     . url : /client

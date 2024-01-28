@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpHeaders;
 import io.jsonwebtoken.Jwts;
@@ -272,6 +273,93 @@ public class VoitureController {
     
         return resultat;
     }
+
+    @PostMapping("/type-carburant")
+    public Map<String, Object> createTypeCarburant(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) {
+        Map<String, Object> resultat = new HashMap<>();
+        int status = 0;
+        String titre = null;
+        String message = null;
+        Map<String, Object> data = new HashMap<>();
+        Vector<String> donnes = new Vector<>();
+    
+        try {
+            Connection connection = ConnectionPostgres.connectDefault();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
+            String name = (String) requestBody.get("nom");
+
+            donnes.add(name);
+            TypeCarburantVoiture typeCarburantVoiture = new TypeCarburantVoiture();
+            typeCarburantVoiture.setNom(name);
+            typeCarburantVoiture.create(connection);
+    
+           
+            status = 200;
+            titre = "Creation de type caburant effectue";
+            message = "Bravo , vous avez creer une nouvelle type de carburant de voiture";
+        } catch (Exception e) {
+            status = 500;
+            titre = "Creation de type de carburant a échoué";
+            message = e.getMessage();
+        } finally {
+            resultat.put("data", donnes);
+            resultat.put("status", status);
+                resultat.put("titre", titre);
+                resultat.put("message", message);
+        }
+    
+        return resultat;
+    }
+
+    @PostMapping("/marque")
+    public Map<String, Object> createMarque(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) {
+        Map<String, Object> resultat = new HashMap<>();
+        int status = 0;
+        String titre = null;
+        String message = null;
+        Map<String, Object> data = new HashMap<>();
+        Vector<String> donnes = new Vector<>();
+    
+        try {
+            Connection connection = ConnectionPostgres.connectDefault();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
+            String name = (String) requestBody.get("nom");
+            String description = (String) requestBody.get("description");
+            String dateCreation = (String) requestBody.get("dateCreation"); 
+            donnes.add(name);
+            donnes.add(description);
+            MarqueVoiture marque = new MarqueVoiture();
+            marque.setNom(name);
+            marque.setDescription(description);
+            marque.setDateCreation(Date.valueOf(dateCreation));
+            marque.create(connection);
+    
+           
+            status = 200;
+            titre = "Creation de marque effectue";
+            message = "Bravo , vous avez creer une nouvelle marque de voiture";
+        } catch (Exception e) {
+            status = 500;
+            titre = "Creation de categorie a échoué";
+            message = e.getMessage();
+        } finally {
+            resultat.put("data", donnes);
+            resultat.put("status", status);
+                resultat.put("titre", titre);
+                resultat.put("message", message);
+        }
+    
+        return resultat;
+    }
+   
     // ---------------- MODIFIER -------------------------------
     @PutMapping("catego/{id}")
     public Map<String, Object> updateCategorie(@PathVariable String id,@RequestBody Map<String, Object> requestBody) {
@@ -288,7 +376,7 @@ public class VoitureController {
         try {
             String name = (String) requestBody.get("nom");
             String description = (String) requestBody.get("description");
-
+            
             donnes.add(name);
             donnes.add(description);
             CategorieVoiture categorieVoiture = new CategorieVoiture();
@@ -316,7 +404,7 @@ public class VoitureController {
     }
 
     @PutMapping("categorie/{id}")
-    public Map putMethodName(@PathVariable String id,@RequestBody Map<String, Object> requestBody) {
+    public Map putMethodName(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id,@RequestBody Map<String, Object> requestBody) {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
@@ -330,7 +418,12 @@ public class VoitureController {
         try {
             String name = (String) requestBody.get("nom");
             String description = (String) requestBody.get("description");
-
+            Connection connection = ConnectionPostgres.connectDefault();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
             donnes.add(name);
             donnes.add(description);
             CategorieVoiture categorieVoiture = new CategorieVoiture();
@@ -338,7 +431,7 @@ public class VoitureController {
             categorieVoiture.setNom(name);
             categorieVoiture.setDescription(description);
             System.out.println(id+" "+name+" "+description);
-            categorieVoiture.update(ConnectionPostgres.connectDefault());
+            categorieVoiture.update(connection);
     
            
             status = 200;
@@ -358,8 +451,98 @@ public class VoitureController {
         return resultat;
     }
 
+    @PutMapping("/marque/{id}")
+    public Map<String, Object> updateMarque(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id,@RequestBody Map<String, Object> requestBody) {
+        Map<String, Object> resultat = new HashMap<>();
+        int status = 0;
+        String titre = null;
+        String message = null;
+        Map<String, Object> data = new HashMap<>();
+        Vector<String> donnes = new Vector<>();
+    
+        try {
+            Connection connection = ConnectionPostgres.connectDefault();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
+            String name = (String) requestBody.get("nom");
+            String description = (String) requestBody.get("description");
+            String dateCreation = (String) requestBody.get("dateCreation"); 
+            donnes.add(name);
+            donnes.add(description);
+            MarqueVoiture marque = new MarqueVoiture();
+            marque.setId(id);
+            marque.setNom(name);
+            marque.setDescription(description);
+            marque.setDateCreation(Date.valueOf(dateCreation));
+            marque.update(connection);
+    
+           
+            status = 200;
+            titre = "Modification de marque effectue";
+            message = "Bravo , vous avez modeifier une nouvelle marque de voiture";
+        } catch (Exception e) {
+            status = 500;
+            titre = "Modification de marque a échoué";
+            message = e.getMessage();
+        } finally {
+            resultat.put("data", donnes);
+            resultat.put("status", status);
+                resultat.put("titre", titre);
+                resultat.put("message", message);
+        }
+    
+        return resultat;
+    }
+
+    @PutMapping("/type-carburant/{id}")
+    public Map<String, Object> updateTypeCarburant(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id,@RequestBody Map<String, Object> requestBody) {
+        Map<String, Object> resultat = new HashMap<>();
+        int status = 0;
+        String titre = null;
+        String message = null;
+        Map<String, Object> data = new HashMap<>();
+        Vector<String> donnes = new Vector<>();
+    
+        try {
+            Connection connection = ConnectionPostgres.connectDefault();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
+            String name = (String) requestBody.get("nom");
+
+            donnes.add(name);
+            TypeCarburantVoiture typeCarburantVoiture = new TypeCarburantVoiture();
+            typeCarburantVoiture.setId(id);
+            typeCarburantVoiture.setNom(name);
+            typeCarburantVoiture.update(connection);
+    
+           
+            status = 200;
+            titre = "Modification de type caburant effectue";
+            message = "Bravo , vous avez modifier une nouvelle type de carburant de voiture";
+        } catch (Exception e) {
+            status = 500;
+            titre = "Modification de type de carburant a échoué";
+            message = e.getMessage();
+        } finally {
+            resultat.put("data", donnes);
+            resultat.put("status", status);
+                resultat.put("titre", titre);
+                resultat.put("message", message);
+        }
+    
+        return resultat;
+    }
+
+    /* --------------------------- D E L E T E -------------------------------------- */
+
     @DeleteMapping("categorie/{id}")
-    public Map deletcategorie(@PathVariable String id) {
+    public Map deletcategorie(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id) {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
@@ -371,10 +554,15 @@ public class VoitureController {
         // status = 500; // Erreur interne du serveur
 
         try {
-
+            Connection connection = ConnectionPostgres.connectDefault();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
             CategorieVoiture categorieVoiture = new CategorieVoiture();
             categorieVoiture.setId(id);
-            categorieVoiture.delete(ConnectionPostgres.connectDefault());
+            categorieVoiture.delete(connection);
     
            
             status = 200;
@@ -382,7 +570,7 @@ public class VoitureController {
             message = "Bravo , vous avez supprimer une categorie de voiture";
         } catch (Exception e) {
             status = 500;
-            titre = "Modification de categorie a échoué";
+            titre = "Suppression de categorie a échoué";
             message = e.getMessage();
         } finally {
             resultat.put("data", donnes);
@@ -392,5 +580,86 @@ public class VoitureController {
         }
     
         return resultat;
+
     }
+
+    @DeleteMapping("marque/{id}")
+    public Map deletemarque(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id) {
+        Map<String, Object> resultat = new HashMap<>();
+        int status = 0;
+        String titre = null;
+        String message = null;
+        Map<String, Object> data = new HashMap<>();
+        Vector<String> donnes = new Vector<>();
+        //status = 200; // Modification réussie
+        //status = 400; // Mauvaise requête
+        // status = 500; // Erreur interne du serveur
+
+        try {
+            Connection connection = ConnectionPostgres.connectDefault();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
+            MarqueVoiture marque = new MarqueVoiture();
+            marque.setId(id);
+            marque.delete(connection);
+    
+           
+            status = 200;
+            titre = "Suppression de marque effectue";
+            message = "Bravo , vous avez supprimer une marque de voiture";
+        } catch (Exception e) {
+            status = 500;
+            titre = "Suppression de marque a échoué";
+            message = e.getMessage();
+        } finally {
+            resultat.put("data", donnes);
+            resultat.put("status", status);
+                resultat.put("titre", titre);
+                resultat.put("message", message);
+        }
+    
+        return resultat;
+}
+@DeleteMapping("/type-carburant/{id}")
+public Map<String, Object> deletetypeCarburant(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id) {
+    Map<String, Object> resultat = new HashMap<>();
+    int status = 0;
+    String titre = null;
+    String message = null;
+    Map<String, Object> data = new HashMap<>();
+    Vector<String> donnes = new Vector<>();
+
+    try {
+        Connection connection = ConnectionPostgres.connectDefault();
+        JwtToken jwtToken = new JwtToken();
+        String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+        PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+        personneAutentification.setAdmin(true);
+        personneAutentification.authentificationByIdAndRole(connection);
+
+        TypeCarburantVoiture typeCarburantVoiture = new TypeCarburantVoiture();
+        typeCarburantVoiture.setId(id);
+        typeCarburantVoiture.delete(connection);
+
+       
+        status = 200;
+        titre = "Suppression de type caburant effectue";
+        message = "Bravo , vous avez supprimer une nouvelle type de carburant de voiture";
+    } catch (Exception e) {
+        status = 500;
+        titre = "Suppression de type de carburant a échoué";
+        message = e.getMessage();
+    } finally {
+        resultat.put("data", donnes);
+        resultat.put("status", status);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+    }
+
+    return resultat;
+}
+
 }
