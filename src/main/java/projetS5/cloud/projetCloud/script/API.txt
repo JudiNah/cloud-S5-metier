@@ -142,6 +142,24 @@
     . data : {
                 "id_annonce":"ANNC0005"
             }
+6 . commission 
+    . list :
+        . url : /commissions
+        . method : get
+        . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0b2tlblZhaWthTmV0Iiwicm9sZSI6ImFkbWluIiwiaWQiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NjEzNjI2fQ.MksxFJ0FZAWeallqPoE3h7_mUcbD3q4cbt2RvGM3GnQ
+    . list par prix ( admin et client )
+        . url : /commission/30000
+        . method : get
+        . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0b2tlblZhaWthTmV0Iiwicm9sZSI6ImFkbWluIiwiaWQiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NjEzNjI2fQ.MksxFJ0FZAWeallqPoE3h7_mUcbD3q4cbt2RvGM3GnQ
+    . create : 
+        . url : /commission
+        . method : post
+        . {
+            "prixMin":"700000",
+            "prixMax":"800000",
+            "tauxCommission":"30"
+            }
+        . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0b2tlblZhaWthTmV0Iiwicm9sZSI6ImFkbWluIiwiaWQiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NjEzNjI2fQ.MksxFJ0FZAWeallqPoE3h7_mUcbD3q4cbt2RvGM3GnQ
 
 ------------ CLIENT ----------------------
 1 .creation compte client
