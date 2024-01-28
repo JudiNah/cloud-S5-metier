@@ -96,7 +96,7 @@ public class LoginController {
                 Date expirationDate = new Date(System.currentTimeMillis() + 2 * 24 * 60 * 60 * 1000);
                 JwtToken jwtToken = new JwtToken();
                 String token = jwtToken.create(idAdmin, "admin");
-                resultat.put("tknidclient", token);
+                resultat.put("tknidadmin", token);
             }
             status = 200;
             titre = "S'authentification VaikaNet";
@@ -135,13 +135,9 @@ public class LoginController {
             }else{
                 String idAdmin = personne.getIdClientByEmailAndPassword(null);
                 Date expirationDate = new Date(System.currentTimeMillis() + 2 * 24 * 60 * 60 * 1000);
-
-                String token = Jwts.builder()
-                        .setSubject(idAdmin)
-                        .setExpiration(expirationDate)
-                        .signWith(SignatureAlgorithm.HS256, "vaikanet") 
-                        .compact();
-                resultat.put("tknidadmin", token);
+                JwtToken jwtToken = new JwtToken();
+                String token = jwtToken.create(idAdmin, "client");
+                resultat.put("tknidclient", token);
             }
             status = 200;
             titre = "Connection de client VaikaNet reussi";

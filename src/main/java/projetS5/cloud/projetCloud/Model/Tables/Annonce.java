@@ -11,9 +11,18 @@ public class Annonce {
     String codeAnnonce;
     String voitureId;
     String personneAutentificationId;
-
+    double commission;
     Voiture voiture;
     Personne personne;
+
+    public void setCommission(double commission) {
+        this.commission = commission;
+    }
+    public double getCommission() {
+        return commission;
+    }
+
+    
 
     public String getAnnonceId() {
         return annonceId;
@@ -82,12 +91,13 @@ public class Annonce {
         this.personne = personne;
     }
 
-    public Annonce(Date dateDebut, Date dateFin, String codeAnnonce, String voitureId, String personneAutentificationId) {
+    public Annonce(Date dateDebut, Date dateFin, String codeAnnonce, String voitureId, String personneAutentificationId,double commission) {
         this.setDateDebut(dateDebut);
         this.setDateFin(dateFin);
         this.setCodeAnnonce(codeAnnonce);
         this.setVoitureId(voitureId);
         this.setPersonneAutentificationId(personneAutentificationId);
+        this.setCommission(commission);
     }
 
     public Annonce() {
@@ -95,13 +105,14 @@ public class Annonce {
     }
 
     public void create(Connection connection) throws Exception {
-        String sql = "INSERT INTO annonce(date_debut, date_fin, code_annonce, voiture_id, personne_autentification_id) VALUES(?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO annonce(date_debut, date_fin, code_annonce, voiture_id, personne_autentification_id,prix_commission) VALUES(?, ?, ?, ?, ?,?)";
         PreparedStatement prstmt = connection.prepareStatement(sql);
         prstmt.setDate(1, getDateDebut());
         prstmt.setDate(2, getDateFin());
         prstmt.setString(3, getCodeAnnonce());
         prstmt.setString(4, getVoitureId());
         prstmt.setString(5, getPersonneAutentificationId());
+        prstmt.setDouble(6, getCommission());
 
         prstmt.executeUpdate();
     }

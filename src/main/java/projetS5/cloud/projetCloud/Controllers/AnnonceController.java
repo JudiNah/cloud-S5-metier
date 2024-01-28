@@ -1,10 +1,12 @@
 package projetS5.cloud.projetCloud.Controllers;
 
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import projetS5.cloud.projetCloud.Context.PgConnection;
@@ -12,6 +14,7 @@ import projetS5.cloud.projetCloud.Model.Bag;
 import projetS5.cloud.projetCloud.Model.DatabaseConnection.ConnectionPostgres;
 import projetS5.cloud.projetCloud.Model.Objects.Client;
 import projetS5.cloud.projetCloud.Model.Tables.*;
+import projetS5.cloud.projetCloud.Model.Utils.JwtToken;
 import projetS5.cloud.projetCloud.Model.Views.VAnnonce;
 
 import java.sql.Connection;
@@ -53,14 +56,18 @@ public class AnnonceController {
     }
     
     @PostMapping("annonce")
-    public Map<String, Object> createNewAnnonce(@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> createNewAnnonce(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
     
         try {
-
+            JwtToken jwtToken = new JwtToken();
+            String idClient = jwtToken.checkBearer(authorizationHeader, "client");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idClient);
+            personneAutentification.setAdmin(false);
+            personneAutentification.authentificationByIdAndRole(null);
             double prix = Double.parseDouble((String) requestBody.get("prix").toString()); 
             String code_annonce = "0000";
             Date annee_fabrication = Date.valueOf((String) requestBody.get("annee_fabrication"));
@@ -72,8 +79,9 @@ public class AnnonceController {
             String transmission_voiture = (String) requestBody.get("transmission_voiture");
             String freignage_voiture = (String) requestBody.get("freignage_voiture");
             List<String> equipement_interne = (List<String>) requestBody.get("equipement_interne");
+            double commission = Double.parseDouble((String) requestBody.get("commission").toString());
             String[] equipement_interne_tab = equipement_interne.toArray(new String[0]);
-            create(prix, code_annonce, annee_fabrication, couleur, consommation, categorie_voiture_id, marque_voiture_id, type_carburant_voiture, transmission_voiture, freignage_voiture, equipement_interne_tab);
+            create(idClient,commission,prix, code_annonce, annee_fabrication, couleur, consommation, categorie_voiture_id, marque_voiture_id, type_carburant_voiture, transmission_voiture, freignage_voiture, equipement_interne_tab);
             status = 200;
             titre = "Creation de nouvelle annonce a fait avec succees";
             message = "Excellent , annonce creer";
@@ -148,7 +156,7 @@ public class AnnonceController {
         return resultat;
     }
    
-    public void create(double prix, String code_annonce, Date annee_fabrication, String couleur, double consommation, String categorie_voiture_id, String marque_voiture_id, String type_carburant_voiture_id, String transmission_voiture_id, String freignage_voiture_id , String[] equipement_interne ) throws Exception {
+    public void create(String perAuth,double commission ,double prix, String code_annonce, Date annee_fabrication, String couleur, double consommation, String categorie_voiture_id, String marque_voiture_id, String type_carburant_voiture_id, String transmission_voiture_id, String freignage_voiture_id , String[] equipement_interne ) throws Exception {
         Connection connection = null;
         connection = PgConnection.connect();
         connection.setAutoCommit(false);
@@ -160,8 +168,7 @@ public class AnnonceController {
         voiturePrix.create(connection);//Insertion prix de voiture
 
         Date dateDebutAnnonce = new Date(new java.util.Date().getTime());//Date Actuel
-        String perAuth = "PER_AT0001";//SESSION
-        Annonce annonce = new Annonce(dateDebutAnnonce, null, code_annonce, voitureId, perAuth);
+        Annonce annonce = new Annonce(dateDebutAnnonce, null, code_annonce, voitureId, perAuth, commission);
         annonce.create(connection);//Insertion de l'annonce
 
         EquipementInterne ei = new EquipementInterne();

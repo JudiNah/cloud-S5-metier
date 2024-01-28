@@ -125,6 +125,10 @@
 
             . method : delete
             . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NTkxMzcyfQ.4TRZnNOuymwbVqi4gCphVTehhpxfxkq5ALACeTkrpYc
+
+
+
+
 ------------ CLIENT ----------------------
 1 .creation compte client
     . url : /client
@@ -147,4 +151,23 @@
                 "email":"judi@email.com",
                 "password":"judimdp"
             }
+
+3 .creer annonce
+    . url : /annonce
+    . method : post
+    . data : {
+            "prix": 12000.0,
+            "code_annonce": "0000",
+            "annee_fabrication": "2022-01-24",
+            "couleur": "45ef33",
+            "consommation": 8.5, 
+            "categorie_voiture_id": "CAT0001",
+            "marque_voiture_id": "MRQ0001",
+            "type_carburant_voiture": "TYPE_CAR0002",
+            "transmission_voiture": "TRSM0001",
+            "freignage_voiture": "FRGN0002",
+            "equipement_interne": ["EQP_IN0001", "EQP_IN0002", "EQP_IN0003"],
+            "commission":35000
+            }
+
 

@@ -194,7 +194,7 @@ CREATE or REPLACE VIEW v_annonce AS
     SELECT aa.date_validation,
            per.nom as nom_admin, per.prenom as prenom_admin, per.address as address_admin,
            per_au.id as utilisateur_id,
-           a.date_debut, a.date_fin , a.id as annonce_id,
+           a.date_debut, a.date_fin , a.id as annonce_id, a.prix_commission prix_commission,
            voit_pr.prix ,
            catalog_voit.*
     FROM annonce a
