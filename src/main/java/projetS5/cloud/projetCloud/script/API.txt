@@ -10,6 +10,17 @@
     . url : /elementNecessaire
     . method : get
     . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NTkxMzcyfQ.4TRZnNOuymwbVqi4gCphVTehhpxfxkq5ALACeTkrpYc
+
+3 .CRUD element necessaire  
+        list : 
+            - categories
+                . url : /categories
+                . method : get
+                . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NTkxMzcyfQ.4TRZnNOuymwbVqi4gCphVTehhpxfxkq5ALACeTkrpYc
+            - marques
+                . url : /marques
+                . method : get
+                . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NTkxMzcyfQ.4TRZnNOuymwbVqi4gCphVTehhpxfxkq5ALACeTkrpYc 
 ------------ CLIENT ----------------------
 1 .creation compte client
     . url : /client

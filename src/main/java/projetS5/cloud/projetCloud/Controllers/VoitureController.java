@@ -73,12 +73,17 @@ public class VoitureController {
         return resultat;
     }
     @GetMapping("categories")
-    public Bag ListCategoriesVoiture(Model model) throws Exception {
+    public Bag ListCategoriesVoiture(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,Model model) throws Exception {
         Connection connection = null;
         Bag bag = new Bag(null, null, null);
         int status = 0;
         try {
             connection = PgConnection.connect();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
             List<CategorieVoiture> categorieVoitureList = new CategorieVoiture().read(connection);
             bag = new Bag(null, null, categorieVoitureList);
             status = 200;
@@ -98,11 +103,16 @@ public class VoitureController {
     }
 
     @GetMapping("marques")
-    public Bag ListeMarquesVoiture(Model model) throws Exception {
+    public Bag ListeMarquesVoiture(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,Model model) throws Exception {
         Connection connection = null;
         Bag bag = new Bag(null, null, null);
         try {
             connection = PgConnection.connect();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
             List<MarqueVoiture> marqueVoitureList = new MarqueVoiture().read(connection);
             bag = new Bag(null, null, marqueVoitureList);
         }
@@ -118,11 +128,16 @@ public class VoitureController {
     }
 
     @GetMapping("types-carburant")
-    public Bag ListeTypesCarburantsVoiture(Model model) throws Exception {
+    public Bag ListeTypesCarburantsVoiture(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,Model model) throws Exception {
         Connection connection = null;
         Bag bag = new Bag(null, null, null);
         try {
             connection = PgConnection.connect();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
             List<TypeCarburantVoiture> typeCarburantVoitureList = new TypeCarburantVoiture().read(connection);
             bag = new Bag(null, null, typeCarburantVoitureList);
         }
@@ -138,11 +153,16 @@ public class VoitureController {
     }
 
     @GetMapping("transmissions")
-    public Bag ListeTransmissionsVoiture(Model model) throws Exception {
+    public Bag ListeTransmissionsVoiture(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,Model model) throws Exception {
         Connection connection = null;
         Bag bag = new Bag(null, null, null);
         try {
             connection = PgConnection.connect();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
             List<TransmissionVoiture> transmissionVoitureList = new TransmissionVoiture().read(connection);
             bag = new Bag(null, null, transmissionVoitureList);
         }
@@ -159,11 +179,16 @@ public class VoitureController {
 
 
     @GetMapping("freinages")
-    public Bag ListeFreinageVoiture(Model model) throws Exception {
+    public Bag ListeFreinageVoiture(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,Model model) throws Exception {
         Connection connection = null;
         Bag bag = new Bag(null, null, null);
         try {
             connection = PgConnection.connect();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
             List<FreignageVoiture> freignageVoitureList = new FreignageVoiture().read(connection);
             bag = new Bag(null, null, freignageVoitureList);
         }
@@ -179,11 +204,16 @@ public class VoitureController {
     }
 
     @GetMapping("equipements-internes")
-    public Bag ListeEquipemenstInternesVoiture(Model model) throws Exception {
+    public Bag ListeEquipemenstInternesVoiture(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,Model model) throws Exception {
         Connection connection = null;
         Bag bag = new Bag(null, null, null);
         try {
             connection = PgConnection.connect();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
             List<EquipementInterne> equipementInterneList = new EquipementInterne().read(connection);
             bag = new Bag(null, null, equipementInterneList);
         }
