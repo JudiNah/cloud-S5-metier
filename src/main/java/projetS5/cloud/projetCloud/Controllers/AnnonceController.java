@@ -27,17 +27,23 @@ import java.util.Vector;
 @RestController
 public class AnnonceController {
     @PostMapping("annonce_valide")
-    public Map<String, Object> validerAnnonce(@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> validerAnnonce(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
     
         try {
+            Connection connection = ConnectionPostgres.connectDefault();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
 
             String annonce_id = (String) requestBody.get("id_annonce"); 
             
-            CreateAnnonceValidee(annonce_id);
+            CreateAnnonceValidee(idAdmin,annonce_id);
             status = 200;
             titre = "Mise a jour de l'annonce en validation";
             message = "Excellent , vous avez valider un publication";
@@ -129,13 +135,19 @@ public class AnnonceController {
     }
 
     @GetMapping("annonce_not_valides")
-    public Map<String, Object> getAllAnnonceNotValide() {
+    public Map<String, Object> getAllAnnonceNotValide(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
         List<VAnnonce> allAnnoncesValides = null;
         try {
+            Connection connection = ConnectionPostgres.connectDefault();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
             VAnnonce annoncesV = new VAnnonce();
             allAnnoncesValides = annoncesV.getAnnoncesNotValidees(PgConnection.connect());
             status = 200;
@@ -223,14 +235,17 @@ public class AnnonceController {
         return bag;
     }
 
-    public void CreateAnnonceValidee(String annonce_id) throws Exception {
+    public void CreateAnnonceValidee(String personneAuthId,String annonce_id) throws Exception {
         Connection connection = null;
         try {
             connection = PgConnection.connect();
             connection.setAutoCommit(false);
             Date dateValidation = new Date(new java.util.Date().getTime());//date actuel
-            String personneAuthId = "PER_AT0002";//SESSION
             AnnonceValidee annonceValidee = new AnnonceValidee(dateValidation, annonce_id, personneAuthId);
+            if(annonceValidee.verifyIsExiste(connection)){
+                throw new Exception("L'annonce est deja valider");
+            }
+
             annonceValidee.create(connection);
             connection.commit();
         }

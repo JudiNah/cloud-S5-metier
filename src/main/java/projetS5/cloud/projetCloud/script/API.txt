@@ -126,9 +126,18 @@
             . method : delete
             . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NTkxMzcyfQ.4TRZnNOuymwbVqi4gCphVTehhpxfxkq5ALACeTkrpYc
 
+4 .Liste annonce
+    . non valides : /annonce_not_valides
+    . method : get
+    . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0b2tlblZhaWthTmV0Iiwicm9sZSI6ImFkbWluIiwiaWQiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NjEzNjI2fQ.MksxFJ0FZAWeallqPoE3h7_mUcbD3q4cbt2RvGM3GnQ
 
-
-
+5 .Valider annonce
+    . url : /annonce_valide
+    . method : post
+    . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0b2tlblZhaWthTmV0Iiwicm9sZSI6ImFkbWluIiwiaWQiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NjEzNjI2fQ.MksxFJ0FZAWeallqPoE3h7_mUcbD3q4cbt2RvGM3GnQ
+    . data : {
+                "id_annonce":"ANNC0005"
+            }
 ------------ CLIENT ----------------------
 1 .creation compte client
     . url : /client
@@ -169,5 +178,6 @@
             "equipement_interne": ["EQP_IN0001", "EQP_IN0002", "EQP_IN0003"],
             "commission":35000
             }
+    .token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0b2tlblZhaWthTmV0Iiwicm9sZSI6ImNsaWVudCIsImlkIjoiUEVSX0FUMDAwNSIsImV4cCI6MTcwNjYxMTU4M30.vqewNYT0qY2qzmrAwBfuRdVONe0i3XwSzLXJCntz4ro
 
 

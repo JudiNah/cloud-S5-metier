@@ -20,7 +20,7 @@ public class VAnnonce {
     AnnonceValidee annonceValidee;
     CatalogVoiture catalogVoiture;
     VoiturePrix voiturePrix;
-    Personne personneAdmin;
+    Personne personneClient;
     PersonneAutentification personneAuthUtilisateur;
 
     public Annonce getAnnonce() {
@@ -55,12 +55,12 @@ public class VAnnonce {
         this.voiturePrix = voiturePrix;
     }
 
-    public Personne getPersonneAdmin() {
-        return personneAdmin;
+    public Personne getPersonneClient() {
+        return personneClient;
     }
 
-    public void setPersonneAdmin(Personne personneAdmin) {
-        this.personneAdmin = personneAdmin;
+    public void setPersonneClient(Personne personneClient) {
+        this.personneClient = personneClient;
     }
 
     public PersonneAutentification getPersonneAuthUtilisateur() {
@@ -71,11 +71,11 @@ public class VAnnonce {
         this.personneAuthUtilisateur = personneAuthUtilisateur;
     }
 
-    public VAnnonce(Annonce annonce,AnnonceValidee annonceValidee, CatalogVoiture catalogVoiture, VoiturePrix voiturePrix, Personne personneAdmin, PersonneAutentification personneAuthUtilisateur) {
+    public VAnnonce(Annonce annonce,AnnonceValidee annonceValidee, CatalogVoiture catalogVoiture, VoiturePrix voiturePrix, Personne personneClient, PersonneAutentification personneAuthUtilisateur) {
         this.annonceValidee = annonceValidee;
         this.catalogVoiture = catalogVoiture;
         this.voiturePrix = voiturePrix;
-        this.personneAdmin = personneAdmin;
+        this.personneClient = personneClient;
         this.personneAuthUtilisateur = personneAuthUtilisateur;
         this.annonce = annonce;
     }
@@ -105,14 +105,14 @@ public class VAnnonce {
             try (ResultSet rs = prstmt.executeQuery(sql)) {
                 while (rs.next()) {
                     AnnonceValidee annonceValidee = new AnnonceValidee(rs.getDate("date_validation"));
-                    Personne personneAdmin = new Personne(rs.getString("nom_admin"), rs.getString("prenom_admin"), rs.getString("address_admin"));
+                    Personne personneClient = new Personne(rs.getString("nom_admin"), rs.getString("prenom_admin"), rs.getString("address_admin"));
                     PersonneAutentification utilisateur = new PersonneAutentification(rs.getString("utilisateur_id"));;
                     VoiturePrix voiturePrix = new VoiturePrix(rs.getDouble("prix"));
                     CatalogVoiture catalogVoiture = new CatalogVoiture(rs.getDate("annee_fabrication"), rs.getString("couleur"), rs.getDouble("consommation"), rs.getString("nom_categorie"),rs.getString("description_categorie"), rs.getString("nom_marque"), rs.getString("description_marque"), rs.getDate("date_creation_marque"), rs.getString("nom_type_carburant"), rs.getString("nom_transmission"), rs.getString("nom_freignage"));
                     Annonce annonce = new Annonce();
                     annonce.setAnnonceId(rs.getString("annonce_id"));
                     annonce.setDateDebut(Date.valueOf(rs.getString("date_debut")));
-                    VAnnonce vAnnonce = new VAnnonce(annonce, annonceValidee, catalogVoiture, voiturePrix, personneAdmin, personneAuthUtilisateur);
+                    VAnnonce vAnnonce = new VAnnonce(annonce, annonceValidee, catalogVoiture, voiturePrix, personneClient, personneAuthUtilisateur);
                     annonceValideeList.add(vAnnonce);
                 }
             }
@@ -128,14 +128,17 @@ public class VAnnonce {
             try (ResultSet rs = prstmt.executeQuery(sql)) {
                 while (rs.next()) {
                     AnnonceValidee annonceValidee = new AnnonceValidee(rs.getDate("date_validation"));
-                    Personne personneAdmin = new Personne(rs.getString("nom_admin"), rs.getString("prenom_admin"), rs.getString("address_admin"));
+                    Personne personneClient = new Personne(rs.getString("nom_client"), rs.getString("prenom_client"), rs.getString("address_client"));
+                    personneClient.setId(rs.getString("utilisateur_id"));
                     PersonneAutentification utilisateur = new PersonneAutentification(rs.getString("utilisateur_id"));;
                     VoiturePrix voiturePrix = new VoiturePrix(rs.getDouble("prix"));
                     CatalogVoiture catalogVoiture = new CatalogVoiture(rs.getDate("annee_fabrication"), rs.getString("couleur"), rs.getDouble("consommation"), rs.getString("nom_categorie"),rs.getString("description_categorie"), rs.getString("nom_marque"), rs.getString("description_marque"), rs.getDate("date_creation_marque"), rs.getString("nom_type_carburant"), rs.getString("nom_transmission"), rs.getString("nom_freignage"));
                     Annonce annonce = new Annonce();
                     annonce.setAnnonceId(rs.getString("annonce_id"));
                     annonce.setDateDebut(rs.getDate("date_debut"));
-                    VAnnonce vAnnonce = new VAnnonce(annonce,annonceValidee, catalogVoiture, voiturePrix, personneAdmin, personneAuthUtilisateur);
+                    annonce.setCommission(rs.getDouble("prix_commission"));
+                    VAnnonce vAnnonce = new VAnnonce(annonce,annonceValidee, catalogVoiture, voiturePrix, personneClient, personneAuthUtilisateur);
+                    vAnnonce.setPersonneAuthUtilisateur(utilisateur);
                     annonceValideeList.add(vAnnonce);
                 }
             }
