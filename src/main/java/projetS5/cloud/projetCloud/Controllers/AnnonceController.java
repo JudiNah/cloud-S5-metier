@@ -302,7 +302,7 @@ public class AnnonceController {
     }
 
     @GetMapping("commission/{price}")
-    public Map<String, Object> getCommissionByPrice(@PathVariable String price) {
+    public Map<String, Object> getCommissionByPrice(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String price) {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
@@ -310,6 +310,12 @@ public class AnnonceController {
         Map<String, Object> donnes = new HashMap<>();
         Commission commission = null;
         try {
+            Connection connection = ConnectionPostgres.connectDefault();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "all");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(null);
+            personneAutentification.authentificationByIdAndRole(connection);
             commission = Commission.getCommissionForPrice(Double.parseDouble(price), null);
            donnes.put("commission", commission);
             status = 200;
@@ -331,7 +337,7 @@ public class AnnonceController {
     }
 
     @GetMapping("/commissions")
-    public Map<String, Object> getAllCommission() {
+    public Map<String, Object> getAllCommission(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
@@ -339,6 +345,12 @@ public class AnnonceController {
         Map<String, Object> donnes = new HashMap<>();  
         Vector<Commission> response = new Vector<>();
         try {
+            Connection connection = ConnectionPostgres.connectDefault();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
             Commission[] commission = Commission.getAllCommissions(null);
             for (Commission commission2 : commission) {
                 response.add(commission2);
@@ -362,7 +374,7 @@ public class AnnonceController {
         return resultat;
     }
     @PostMapping("/commission")
-    public Map<String, Object> createNewCommission(@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> createNewCommission(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
@@ -370,6 +382,13 @@ public class AnnonceController {
         Map<String, Object> donnes = new HashMap<>();
     
         try {
+            Connection connection = ConnectionPostgres.connectDefault();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
+
             String prixMin = (String) requestBody.get("prixMin");
             String prixMax = (String) requestBody.get("prixMax");
             String taux = (String) requestBody.get("tauxCommission");
@@ -393,7 +412,6 @@ public class AnnonceController {
             commission.setPrixMax(Double.parseDouble(prixMax));
             commission.setPrixMin(Double.parseDouble(prixMin));
             commission.setTauxCommission(Double.parseDouble(taux));
-            Connection connection = ConnectionPostgres.connectDefault();
             commission.insertNewCommission(connection);
             
             status = 200;

@@ -1028,39 +1028,8 @@ public class VoitureController {
             return resultat;
         }
 
-        /*----------------------------COMMISSION------------------------*/
-        @GetMapping("/commissions")
-        public Map<String, Object> getCommissions(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-            // System.out.println(authorizationHeader);
-            Map<String, Object> resultat = new HashMap<>();
-            int status = 0;
-            String titre = null;
-            String message = null;
-            Map<String, Object> donnes = new HashMap<>();
-            Vector donne = new Vector();
-            try {
-                Commission[] commissions = Commission.getAllCommissions(null);
-                donne.add(commissions);
-
-                status = 200;
-                titre = "Prendre tous les commissions";
-                message = "Excellent , vous avez prendre tous les commissions ";
-
-            } catch (Exception e) {
-                status = 500;
-                titre = "Selection de commissions echouee";
-                message = e.getMessage();
-            } finally {
-                resultat.put("data", donne);
-                resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
-            }
-
-            return resultat;
-        }
-
-    @PutMapping("update-commission/{id}")
+ 
+    @PutMapping("commission/{id}")
     public Map<String, Object> updateCommission(@PathVariable String id,@RequestBody Map<String, Object> requestBody) {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
