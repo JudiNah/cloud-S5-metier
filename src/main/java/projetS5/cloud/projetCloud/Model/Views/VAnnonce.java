@@ -105,14 +105,17 @@ public class VAnnonce {
             try (ResultSet rs = prstmt.executeQuery(sql)) {
                 while (rs.next()) {
                     AnnonceValidee annonceValidee = new AnnonceValidee(rs.getDate("date_validation"));
-                    Personne personneClient = new Personne(rs.getString("nom_admin"), rs.getString("prenom_admin"), rs.getString("address_admin"));
+                    Personne personneClient = new Personne(rs.getString("nom_client"), rs.getString("prenom_client"), rs.getString("address_client"));
+                    personneClient.setId(rs.getString("utilisateur_id"));
                     PersonneAutentification utilisateur = new PersonneAutentification(rs.getString("utilisateur_id"));;
                     VoiturePrix voiturePrix = new VoiturePrix(rs.getDouble("prix"));
                     CatalogVoiture catalogVoiture = new CatalogVoiture(rs.getDate("annee_fabrication"), rs.getString("couleur"), rs.getDouble("consommation"), rs.getString("nom_categorie"),rs.getString("description_categorie"), rs.getString("nom_marque"), rs.getString("description_marque"), rs.getDate("date_creation_marque"), rs.getString("nom_type_carburant"), rs.getString("nom_transmission"), rs.getString("nom_freignage"));
                     Annonce annonce = new Annonce();
                     annonce.setAnnonceId(rs.getString("annonce_id"));
-                    annonce.setDateDebut(Date.valueOf(rs.getString("date_debut")));
-                    VAnnonce vAnnonce = new VAnnonce(annonce, annonceValidee, catalogVoiture, voiturePrix, personneClient, personneAuthUtilisateur);
+                    annonce.setDateDebut(rs.getDate("date_debut"));
+                    annonce.setCommission(rs.getDouble("prix_commission"));
+                    VAnnonce vAnnonce = new VAnnonce(annonce,annonceValidee, catalogVoiture, voiturePrix, personneClient, personneAuthUtilisateur);
+                    vAnnonce.setPersonneAuthUtilisateur(utilisateur);
                     annonceValideeList.add(vAnnonce);
                 }
             }

@@ -107,13 +107,20 @@ public class AnnonceController {
 
 
     @GetMapping("annonce_valides")
-    public Map<String, Object> getAllAnnonceValide() {
+    public Map<String, Object> getAllAnnonceValide(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
         List<VAnnonce> allAnnoncesValides = null;
         try {
+            Connection connection = ConnectionPostgres.connectDefault();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "all");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
+
             VAnnonce annoncesV = new VAnnonce();
             allAnnoncesValides = annoncesV.getAnnoncesValidees(PgConnection.connect());
             status = 200;
