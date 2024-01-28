@@ -57,13 +57,14 @@
             - freinages
                 . url : /freinages
                 . data : {
-
-                        }
-            - equipements internes
-                . url : /equipements-internes
-                . data : {
                             "nom":"new freinage tk"
                         }
+            - equipements internes
+                . url : /equipement-interne
+                . data : {
+                            "nom":"new equipement interne tk"
+                        }
+
             
             . method : post
             . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NTkxMzcyfQ.4TRZnNOuymwbVqi4gCphVTehhpxfxkq5ALACeTkrpYc   
@@ -88,8 +89,18 @@
                 . data : {
                             "nom":"old type carburant"
                         }
-            - type carburant 
+            - transmission 
                 . url : /transmission/TRSM0006
+                . data : {
+                            "nom":"old transmission"
+                        }
+            - freinage 
+                . url : /freinage/TRSM0006
+                . data : {
+                            "nom":"old transmission"
+                        }
+            - equipement interne 
+                . url : /equipement-interne/EQP_IN0006
                 . data : {
                             "nom":"old transmission"
                         }
@@ -107,6 +118,10 @@
                 . url : /type-carburant/TYPE_CAR0006
             - transmission 
                 . url : /transmission/TRSM0006
+            - freinage 
+                . url : /freinage/FRGN0006
+            - equipement interne 
+                . url : /equipement-interne/EQP_IN0006
 
             . method : delete
             . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NTkxMzcyfQ.4TRZnNOuymwbVqi4gCphVTehhpxfxkq5ALACeTkrpYc

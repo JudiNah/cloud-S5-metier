@@ -63,10 +63,18 @@ public class EquipementInterne {
     }
 
     public void update(Connection connection) throws SQLException {
-        String sql = "UPDATE type_carburant_voiture SET nom = ?  WHERE id =?";
+        String sql = "UPDATE equipement_interne SET nom = ?  WHERE id =?";
         PreparedStatement prstmt = connection.prepareStatement(sql);
         prstmt.setString(1, getNom());
         prstmt.setString(2, getId());
+
+        prstmt.executeUpdate();
+    }
+
+    public void delete(Connection connection) throws SQLException {
+        String sql = "delete from  equipement_interne WHERE id =?";
+        PreparedStatement prstmt = connection.prepareStatement(sql);
+        prstmt.setString(1, getId());
 
         prstmt.executeUpdate();
     }

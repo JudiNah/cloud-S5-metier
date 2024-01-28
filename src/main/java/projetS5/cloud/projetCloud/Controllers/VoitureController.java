@@ -416,7 +416,7 @@ public class VoitureController {
             String name = (String) requestBody.get("nom");
 
             donnes.add(name);
-            TransmissionVoiture transmission = new TransmissionVoiture();
+            EquipementInterne transmission = new EquipementInterne();
             transmission.setNom(name);
             transmission.create(connection);
     
@@ -704,6 +704,90 @@ public class VoitureController {
         return resultat;
     }
 
+    @PutMapping("/freinage/{id}")
+    public Map<String, Object> updatefreinage(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id,@RequestBody Map<String, Object> requestBody) {
+        Map<String, Object> resultat = new HashMap<>();
+        int status = 0;
+        String titre = null;
+        String message = null;
+        Map<String, Object> data = new HashMap<>();
+        Vector<String> donnes = new Vector<>();
+    
+        try {
+            Connection connection = ConnectionPostgres.connectDefault();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
+            String name = (String) requestBody.get("nom");
+
+            donnes.add(name);
+            FreignageVoiture freignageVoiture = new FreignageVoiture();
+            freignageVoiture.setId(id);
+            freignageVoiture.setNom(name);
+            freignageVoiture.update(connection);
+    
+           
+            status = 200;
+            titre = "Modification de freinage effectue";
+            message = "Bravo , vous avez modifier une freinage de voiture";
+        } catch (Exception e) {
+            status = 500;
+            titre = "Modification de freinage a échoué";
+            message = e.getMessage();
+        } finally {
+            resultat.put("data", donnes);
+            resultat.put("status", status);
+                resultat.put("titre", titre);
+                resultat.put("message", message);
+        }
+    
+        return resultat;
+    }
+
+    @PutMapping("/equipement-interne/{id}")
+    public Map<String, Object> updateEquipementInterne(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id,@RequestBody Map<String, Object> requestBody) {
+        Map<String, Object> resultat = new HashMap<>();
+        int status = 0;
+        String titre = null;
+        String message = null;
+        Map<String, Object> data = new HashMap<>();
+        Vector<String> donnes = new Vector<>();
+    
+        try {
+            Connection connection = ConnectionPostgres.connectDefault();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
+            String name = (String) requestBody.get("nom");
+
+            donnes.add(name);
+            EquipementInterne equipementInterne = new EquipementInterne();
+            equipementInterne.setId(id);
+            equipementInterne.setNom(name);
+            equipementInterne.update(connection);
+    
+           
+            status = 200;
+            titre = "Modification de l'equipement interne effectue";
+            message = "Bravo , vous avez modifier un equipement ineterne de voiture";
+        } catch (Exception e) {
+            status = 500;
+            titre = "Modification de equipement interne a échoué";
+            message = e.getMessage();
+        } finally {
+            resultat.put("data", donnes);
+            resultat.put("status", status);
+                resultat.put("titre", titre);
+                resultat.put("message", message);
+        }
+    
+        return resultat;
+    }
+
     /* --------------------------- D E L E T E -------------------------------------- */
 
     @DeleteMapping("categorie/{id}")
@@ -855,6 +939,84 @@ public class VoitureController {
             } catch (Exception e) {
                 status = 500;
                 titre = "Suppression de transmission a échoué";
+                message = e.getMessage();
+            } finally {
+                resultat.put("data", donnes);
+                resultat.put("status", status);
+                    resultat.put("titre", titre);
+                    resultat.put("message", message);
+            }
+
+            return resultat;
+        }
+
+        @DeleteMapping("/freinage/{id}")
+        public Map<String, Object> deletefreinage(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id) {
+            Map<String, Object> resultat = new HashMap<>();
+            int status = 0;
+            String titre = null;
+            String message = null;
+            Map<String, Object> data = new HashMap<>();
+            Vector<String> donnes = new Vector<>();
+
+            try {
+                Connection connection = ConnectionPostgres.connectDefault();
+                JwtToken jwtToken = new JwtToken();
+                String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+                PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+                personneAutentification.setAdmin(true);
+                personneAutentification.authentificationByIdAndRole(connection);
+
+                FreignageVoiture freignageVoiture = new FreignageVoiture();
+                freignageVoiture.setId(id);
+                freignageVoiture.delete(connection);
+
+            
+                status = 200;
+                titre = "Suppression de frenage effectue";
+                message = "Bravo , vous avez supprimer frenage de voiture";
+            } catch (Exception e) {
+                status = 500;
+                titre = "Suppression de freinage a échoué";
+                message = e.getMessage();
+            } finally {
+                resultat.put("data", donnes);
+                resultat.put("status", status);
+                    resultat.put("titre", titre);
+                    resultat.put("message", message);
+            }
+
+            return resultat;
+        }
+
+        @DeleteMapping("/equipement-interne/{id}")
+        public Map<String, Object> deleteEquipementInterne(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id) {
+            Map<String, Object> resultat = new HashMap<>();
+            int status = 0;
+            String titre = null;
+            String message = null;
+            Map<String, Object> data = new HashMap<>();
+            Vector<String> donnes = new Vector<>();
+
+            try {
+                Connection connection = ConnectionPostgres.connectDefault();
+                JwtToken jwtToken = new JwtToken();
+                String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+                PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+                personneAutentification.setAdmin(true);
+                personneAutentification.authentificationByIdAndRole(connection);
+
+                EquipementInterne transmissionVoiture = new EquipementInterne();
+                transmissionVoiture.setId(id);
+                transmissionVoiture.delete(connection);
+
+            
+                status = 200;
+                titre = "Suppression de equipement interne effectue";
+                message = "Bravo , vous avez supprimer un equipement interne de voiture";
+            } catch (Exception e) {
+                status = 500;
+                titre = "Suppression de equipement interne a échoué";
                 message = e.getMessage();
             } finally {
                 resultat.put("data", donnes);
