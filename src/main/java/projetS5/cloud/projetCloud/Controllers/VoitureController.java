@@ -356,6 +356,88 @@ public class VoitureController {
         return resultat;
     }
 
+    @PostMapping("/freinage")
+    public Map<String, Object> createFreinage(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) {
+        Map<String, Object> resultat = new HashMap<>();
+        int status = 0;
+        String titre = null;
+        String message = null;
+        Map<String, Object> data = new HashMap<>();
+        Vector<String> donnes = new Vector<>();
+    
+        try {
+            Connection connection = ConnectionPostgres.connectDefault();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
+            String name = (String) requestBody.get("nom");
+
+            donnes.add(name);
+            FreignageVoiture transmission = new FreignageVoiture();
+            transmission.setNom(name);
+            transmission.create(connection);
+    
+           
+            status = 200;
+            titre = "Creation de freinage effectue";
+            message = "Bravo , vous avez creer une nouvelle freinage de voiture";
+        } catch (Exception e) {
+            status = 500;
+            titre = "Creation de freinage a échoué";
+            message = e.getMessage();
+        } finally {
+            resultat.put("data", donnes);
+            resultat.put("status", status);
+                resultat.put("titre", titre);
+                resultat.put("message", message);
+        }
+    
+        return resultat;
+    }
+
+    @PostMapping("/equipement-interne")
+    public Map<String, Object> createEquipementInterne(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) {
+        Map<String, Object> resultat = new HashMap<>();
+        int status = 0;
+        String titre = null;
+        String message = null;
+        Map<String, Object> data = new HashMap<>();
+        Vector<String> donnes = new Vector<>();
+    
+        try {
+            Connection connection = ConnectionPostgres.connectDefault();
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(true);
+            personneAutentification.authentificationByIdAndRole(connection);
+            String name = (String) requestBody.get("nom");
+
+            donnes.add(name);
+            TransmissionVoiture transmission = new TransmissionVoiture();
+            transmission.setNom(name);
+            transmission.create(connection);
+    
+           
+            status = 200;
+            titre = "Creation de equipement interne effectue";
+            message = "Bravo , vous avez creer une nouvelle equipement interne de voiture";
+        } catch (Exception e) {
+            status = 500;
+            titre = "Creation de equipement interne a échoué";
+            message = e.getMessage();
+        } finally {
+            resultat.put("data", donnes);
+            resultat.put("status", status);
+                resultat.put("titre", titre);
+                resultat.put("message", message);
+        }
+    
+        return resultat;
+    }
+
     @PostMapping("/marque")
     public Map<String, Object> createMarque(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) {
         Map<String, Object> resultat = new HashMap<>();

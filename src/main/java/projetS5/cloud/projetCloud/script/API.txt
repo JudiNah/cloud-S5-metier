@@ -61,6 +61,9 @@
                         }
             - equipements internes
                 . url : /equipements-internes
+                . data : {
+                            "nom":"new freinage tk"
+                        }
             
             . method : post
             . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NTkxMzcyfQ.4TRZnNOuymwbVqi4gCphVTehhpxfxkq5ALACeTkrpYc   
@@ -102,6 +105,8 @@
                 . url : /marque/MRQ0008   
             - type carburant 
                 . url : /type-carburant/TYPE_CAR0006
+            - transmission 
+                . url : /transmission/TRSM0006
 
             . method : delete
             . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NTkxMzcyfQ.4TRZnNOuymwbVqi4gCphVTehhpxfxkq5ALACeTkrpYc
