@@ -221,3 +221,7 @@
                 "id_annonce": "ANNC0019"
             }
     .token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0b2tlblZhaWthTmV0Iiwicm9sZSI6ImNsaWVudCIsImlkIjoiUEVSX0FUMDAwNSIsImV4cCI6MTcwNjYxMTU4M30.vqewNYT0qY2qzmrAwBfuRdVONe0i3XwSzLXJCntz4ro
+5 . recherche multi critere
+    . url /annonce/motcle
+    .   method : get
+    .token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0b2tlblZhaWthTmV0Iiwicm9sZSI6ImNsaWVudCIsImlkIjoiUEVSX0FUMDAwNSIsImV4cCI6MTcwNjYxMTU4M30.vqewNYT0qY2qzmrAwBfuRdVONe0i3XwSzLXJCntz4ro
