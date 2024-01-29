@@ -1,15 +1,24 @@
 <!-- connectionPostgres.xml -->
 <connectionConfig>
     <ip>viaduct.proxy.rlwy.net</ip>
-    <port>20144</port>
+    <port>44012</port>
     <databaseName>railway</databaseName>
     <userName>postgres</userName>
-    <password>Ae42eebf5fBAgaG2D66DfaggAcBfGee5</password>
+    <password>3-5B-cF*CC4G-EabgcEAG5dCF2DeCadA</password>
 </connectionConfig>
 <!-- PGHOST		viaduct.proxy.rlwy.net
 PGPASSWORD	Ae42eebf5fBAgaG2D66DfaggAcBfGee5
 PGPORT		20144
 PGUSER		postgres
 PGDATABASE	railway -->
+
+
+<!-- 
+    host : viaduct.proxy.rlwy.net
+    database : railway
+    port : 44012
+    username : postgres
+    password : 3-5B-cF*CC4G-EabgcEAG5dCF2DeCadA
+ -->
 
 

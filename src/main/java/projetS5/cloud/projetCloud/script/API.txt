@@ -31,7 +31,7 @@
 
         create :
             - categories
-                . url : /categories
+                . url : /categorie
                 . data : {
                              "nom":"New categorie",
                             "description":"New description"

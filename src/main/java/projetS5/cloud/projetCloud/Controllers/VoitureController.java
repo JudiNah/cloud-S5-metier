@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RestController
 public class VoitureController {
     @GetMapping("elementNecessaire")
-    public Map<String, Object> element_necessaire(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Map<String, Object> element_necessaire(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws Exception {
         // System.out.println(authorizationHeader);
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
@@ -41,12 +41,14 @@ public class VoitureController {
         String message = null;
         Map<String, Object> donnes = new HashMap<>();
         Vector donne = new Vector();
+        Connection connection = null;
         try {
+        connection = ConnectionPostgres.connectDefault();
         JwtToken jwtToken = new JwtToken();
         String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
         PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
         personneAutentification.setAdmin(true);
-        personneAutentification.authentificationByIdAndRole(null);
+        personneAutentification.authentificationByIdAndRole(connection);
         System.out.println(idAdmin);
         donne.add("categories");
         donne.add("marques");
@@ -54,8 +56,7 @@ public class VoitureController {
         donne.add("transmissions");
         donne.add("freinages");
         donne.add("equipements-internes");
-          
-           
+    
             status = 200;
             titre = "Prendre les elements necessaire a reussi";
             message = "Excellent , vous avez prendre tout les elements necessaire ";
@@ -67,8 +68,12 @@ public class VoitureController {
         } finally {
             resultat.put("data", donne);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;
@@ -231,16 +236,17 @@ public class VoitureController {
 
     // ---------------- CREATE -----------------------------------------------------------
     @PostMapping("/categorie")
-    public Map<String, Object> createCategorie(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> createCategorie(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) throws Exception{
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
         Map<String, Object> data = new HashMap<>();
         Vector<String> donnes = new Vector<>();
-    
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPostgres.connectDefault();
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
@@ -267,24 +273,29 @@ public class VoitureController {
         } finally {
             resultat.put("data", donnes);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;
     }
 
     @PostMapping("/type-carburant")
-    public Map<String, Object> createTypeCarburant(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> createTypeCarburant(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) throws Exception{
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
         Map<String, Object> data = new HashMap<>();
         Vector<String> donnes = new Vector<>();
-    
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPostgres.connectDefault();
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
@@ -308,24 +319,29 @@ public class VoitureController {
         } finally {
             resultat.put("data", donnes);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;
     }
 
     @PostMapping("/transmission")
-    public Map<String, Object> createTransmission(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> createTransmission(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) throws Exception {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
         Map<String, Object> data = new HashMap<>();
         Vector<String> donnes = new Vector<>();
-    
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPostgres.connectDefault();
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
@@ -349,24 +365,29 @@ public class VoitureController {
         } finally {
             resultat.put("data", donnes);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;
     }
 
     @PostMapping("/freinage")
-    public Map<String, Object> createFreinage(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> createFreinage(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) throws Exception {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
         Map<String, Object> data = new HashMap<>();
         Vector<String> donnes = new Vector<>();
-    
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPostgres.connectDefault();
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
@@ -390,24 +411,30 @@ public class VoitureController {
         } finally {
             resultat.put("data", donnes);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;
     }
 
     @PostMapping("/equipement-interne")
-    public Map<String, Object> createEquipementInterne(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> createEquipementInterne(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) throws Exception{
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
         Map<String, Object> data = new HashMap<>();
         Vector<String> donnes = new Vector<>();
-    
+        
+        Connection connection =  null;
         try {
-            Connection connection = ConnectionPostgres.connectDefault();
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
@@ -431,15 +458,19 @@ public class VoitureController {
         } finally {
             resultat.put("data", donnes);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;
     }
 
     @PostMapping("/marque")
-    public Map<String, Object> createMarque(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> createMarque(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) throws Exception {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
@@ -447,8 +478,10 @@ public class VoitureController {
         Map<String, Object> data = new HashMap<>();
         Vector<String> donnes = new Vector<>();
     
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPostgres.connectDefault();
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
@@ -476,8 +509,12 @@ public class VoitureController {
         } finally {
             resultat.put("data", donnes);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;
@@ -485,7 +522,7 @@ public class VoitureController {
    
     // ---------------- MODIFIER -------------------------------
     @PutMapping("catego/{id}")
-    public Map<String, Object> updateCategorie(@PathVariable String id,@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> updateCategorie(@PathVariable String id,@RequestBody Map<String, Object> requestBody) throws Exception{
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
@@ -495,8 +532,10 @@ public class VoitureController {
         //status = 200; // Modification réussie
         //status = 400; // Mauvaise requête
         // status = 500; // Erreur interne du serveur
-
+        Connection connection = null;
         try {
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
             String name = (String) requestBody.get("nom");
             String description = (String) requestBody.get("description");
             
@@ -506,7 +545,7 @@ public class VoitureController {
             categorieVoiture.setId(id);
             categorieVoiture.setNom(name);
             categorieVoiture.setDescription(description);
-            categorieVoiture.update(ConnectionPostgres.connectDefault());
+            categorieVoiture.update(connection);
     
            
             status = 200;
@@ -519,15 +558,19 @@ public class VoitureController {
         } finally {
             resultat.put("data", donnes);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;
     }
 
     @PutMapping("categorie/{id}")
-    public Map putMethodName(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id,@RequestBody Map<String, Object> requestBody) {
+    public Map putMethodName(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id,@RequestBody Map<String, Object> requestBody) throws Exception {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
@@ -537,11 +580,12 @@ public class VoitureController {
         //status = 200; // Modification réussie
         //status = 400; // Mauvaise requête
         // status = 500; // Erreur interne du serveur
-
+        Connection connection = null;
         try {
             String name = (String) requestBody.get("nom");
             String description = (String) requestBody.get("description");
-            Connection connection = ConnectionPostgres.connectDefault();
+             connection = ConnectionPostgres.connectDefault();
+             connection.setAutoCommit(false);
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
@@ -567,24 +611,29 @@ public class VoitureController {
         } finally {
             resultat.put("data", donnes);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;
     }
 
     @PutMapping("/marque/{id}")
-    public Map<String, Object> updateMarque(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id,@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> updateMarque(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id,@RequestBody Map<String, Object> requestBody) throws Exception{
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
         Map<String, Object> data = new HashMap<>();
         Vector<String> donnes = new Vector<>();
-    
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPostgres.connectDefault();
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
@@ -613,24 +662,28 @@ public class VoitureController {
         } finally {
             resultat.put("data", donnes);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;
     }
 
     @PutMapping("/type-carburant/{id}")
-    public Map<String, Object> updateTypeCarburant(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id,@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> updateTypeCarburant(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id,@RequestBody Map<String, Object> requestBody) throws Exception {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
         Map<String, Object> data = new HashMap<>();
         Vector<String> donnes = new Vector<>();
-    
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPostgres.connectDefault();
+            connection = ConnectionPostgres.connectDefault();
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
@@ -655,24 +708,29 @@ public class VoitureController {
         } finally {
             resultat.put("data", donnes);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;
     }
 
     @PutMapping("/transmission/{id}")
-    public Map<String, Object> updateTransmission(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id,@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> updateTransmission(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id,@RequestBody Map<String, Object> requestBody) throws Exception {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
         Map<String, Object> data = new HashMap<>();
         Vector<String> donnes = new Vector<>();
-    
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPostgres.connectDefault();
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
@@ -697,24 +755,28 @@ public class VoitureController {
         } finally {
             resultat.put("data", donnes);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;
     }
 
     @PutMapping("/freinage/{id}")
-    public Map<String, Object> updatefreinage(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id,@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> updatefreinage(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id,@RequestBody Map<String, Object> requestBody) throws Exception {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
         Map<String, Object> data = new HashMap<>();
         Vector<String> donnes = new Vector<>();
-    
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPostgres.connectDefault();
+            connection = ConnectionPostgres.connectDefault();
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
@@ -739,24 +801,29 @@ public class VoitureController {
         } finally {
             resultat.put("data", donnes);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;
     }
 
     @PutMapping("/equipement-interne/{id}")
-    public Map<String, Object> updateEquipementInterne(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id,@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> updateEquipementInterne(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id,@RequestBody Map<String, Object> requestBody) throws Exception{
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
         Map<String, Object> data = new HashMap<>();
         Vector<String> donnes = new Vector<>();
-    
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPostgres.connectDefault();
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
@@ -781,8 +848,12 @@ public class VoitureController {
         } finally {
             resultat.put("data", donnes);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;
@@ -791,7 +862,7 @@ public class VoitureController {
     /* --------------------------- D E L E T E -------------------------------------- */
 
     @DeleteMapping("categorie/{id}")
-    public Map deletcategorie(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id) {
+    public Map deletcategorie(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id) throws Exception {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
@@ -801,9 +872,10 @@ public class VoitureController {
         //status = 200; // Modification réussie
         //status = 400; // Mauvaise requête
         // status = 500; // Erreur interne du serveur
+        Connection connection = null;
 
         try {
-            Connection connection = ConnectionPostgres.connectDefault();
+            connection = ConnectionPostgres.connectDefault();
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
@@ -824,8 +896,12 @@ public class VoitureController {
         } finally {
             resultat.put("data", donnes);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;
@@ -833,7 +909,7 @@ public class VoitureController {
     }
 
     @DeleteMapping("marque/{id}")
-    public Map deletemarque(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id) {
+    public Map deletemarque(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id) throws Exception{
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
@@ -843,9 +919,10 @@ public class VoitureController {
         //status = 200; // Modification réussie
         //status = 400; // Mauvaise requête
         // status = 500; // Erreur interne du serveur
-
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPostgres.connectDefault();
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
@@ -866,23 +943,29 @@ public class VoitureController {
         } finally {
             resultat.put("data", donnes);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;
 }
         @DeleteMapping("/type-carburant/{id}")
-        public Map<String, Object> deletetypeCarburant(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id) {
+        public Map<String, Object> deletetypeCarburant(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id) throws Exception {
             Map<String, Object> resultat = new HashMap<>();
             int status = 0;
             String titre = null;
             String message = null;
             Map<String, Object> data = new HashMap<>();
             Vector<String> donnes = new Vector<>();
+            Connection connection = null;
 
             try {
-                Connection connection = ConnectionPostgres.connectDefault();
+                connection = ConnectionPostgres.connectDefault();
+                connection.setAutoCommit(false);
                 JwtToken jwtToken = new JwtToken();
                 String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
                 PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
@@ -904,24 +987,29 @@ public class VoitureController {
             } finally {
                 resultat.put("data", donnes);
                 resultat.put("status", status);
-                    resultat.put("titre", titre);
-                    resultat.put("message", message);
+                resultat.put("titre", titre);
+                resultat.put("message", message);
+                if (!(connection==null)) {
+                    connection.commit();
+                    connection.close();
+                }
             }
 
             return resultat;
         }
 
         @DeleteMapping("/transmission/{id}")
-        public Map<String, Object> deletetransmission(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id) {
+        public Map<String, Object> deletetransmission(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id) throws Exception{
             Map<String, Object> resultat = new HashMap<>();
             int status = 0;
             String titre = null;
             String message = null;
             Map<String, Object> data = new HashMap<>();
             Vector<String> donnes = new Vector<>();
-
+            Connection connection = null;
             try {
-                Connection connection = ConnectionPostgres.connectDefault();
+                connection = ConnectionPostgres.connectDefault();
+                connection.setAutoCommit(false);
                 JwtToken jwtToken = new JwtToken();
                 String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
                 PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
@@ -943,24 +1031,29 @@ public class VoitureController {
             } finally {
                 resultat.put("data", donnes);
                 resultat.put("status", status);
-                    resultat.put("titre", titre);
-                    resultat.put("message", message);
+                resultat.put("titre", titre);
+                resultat.put("message", message);
+                if (!(connection==null)) {
+                    connection.commit();
+                    connection.close();
+                }
             }
 
             return resultat;
         }
 
         @DeleteMapping("/freinage/{id}")
-        public Map<String, Object> deletefreinage(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id) {
+        public Map<String, Object> deletefreinage(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id) throws Exception{
             Map<String, Object> resultat = new HashMap<>();
             int status = 0;
             String titre = null;
             String message = null;
             Map<String, Object> data = new HashMap<>();
             Vector<String> donnes = new Vector<>();
-
+            Connection connection = null;
             try {
-                Connection connection = ConnectionPostgres.connectDefault();
+                connection = ConnectionPostgres.connectDefault();
+                connection.setAutoCommit(false);
                 JwtToken jwtToken = new JwtToken();
                 String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
                 PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
@@ -982,24 +1075,29 @@ public class VoitureController {
             } finally {
                 resultat.put("data", donnes);
                 resultat.put("status", status);
-                    resultat.put("titre", titre);
-                    resultat.put("message", message);
+                resultat.put("titre", titre);
+                resultat.put("message", message);
+                if (!(connection==null)) {
+                    connection.commit();
+                    connection.close();
+                }
             }
 
             return resultat;
         }
 
         @DeleteMapping("/equipement-interne/{id}")
-        public Map<String, Object> deleteEquipementInterne(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id) {
+        public Map<String, Object> deleteEquipementInterne(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id) throws Exception {
             Map<String, Object> resultat = new HashMap<>();
             int status = 0;
             String titre = null;
             String message = null;
             Map<String, Object> data = new HashMap<>();
             Vector<String> donnes = new Vector<>();
-
+            Connection connection = null;
             try {
-                Connection connection = ConnectionPostgres.connectDefault();
+                connection = ConnectionPostgres.connectDefault();
+                connection.setAutoCommit(false);
                 JwtToken jwtToken = new JwtToken();
                 String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
                 PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
@@ -1021,8 +1119,12 @@ public class VoitureController {
             } finally {
                 resultat.put("data", donnes);
                 resultat.put("status", status);
-                    resultat.put("titre", titre);
-                    resultat.put("message", message);
+                resultat.put("titre", titre);
+                resultat.put("message", message);
+                if (!(connection==null)) {
+                    connection.commit();
+                    connection.close();
+                }
             }
 
             return resultat;
@@ -1030,15 +1132,17 @@ public class VoitureController {
 
  
     @PutMapping("commission/{id}")
-    public Map<String, Object> updateCommission(@PathVariable String id,@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> updateCommission(@PathVariable String id,@RequestBody Map<String, Object> requestBody) throws Exception {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
         Map<String, Object> data = new HashMap<>();
         Vector<String> donnes = new Vector<>();
-
+        Connection connection = null;
         try {
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
             double prixMin = Double.parseDouble( (String) requestBody.get("prix_min"));
             double prixMax = Double.parseDouble( (String) requestBody.get("prix_max"));
             double tauxCommission = Double.parseDouble( (String) requestBody.get("taux_commission"));
@@ -1064,6 +1168,10 @@ public class VoitureController {
             resultat.put("status", status);
             resultat.put("titre", titre);
             resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
 
         return resultat;

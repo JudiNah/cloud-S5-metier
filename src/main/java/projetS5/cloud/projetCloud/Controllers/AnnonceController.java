@@ -27,14 +27,15 @@ import java.util.Vector;
 @RestController
 public class AnnonceController {
     @PostMapping("annonce_valide")
-    public Map<String, Object> validerAnnonce(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> validerAnnonce(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) throws Exception {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
-    
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPostgres.connectDefault();
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
@@ -43,7 +44,7 @@ public class AnnonceController {
 
             String annonce_id = (String) requestBody.get("id_annonce"); 
             
-            CreateAnnonceValidee(idAdmin,annonce_id);
+            CreateAnnonceValidee(connection,idAdmin,annonce_id);
             status = 200;
             titre = "Mise a jour de l'annonce en validation";
             message = "Excellent , vous avez valider un publication";
@@ -54,26 +55,32 @@ public class AnnonceController {
             e.printStackTrace();
         } finally {
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }   
         }
     
         return resultat;
     }
     
     @PostMapping("annonce")
-    public Map<String, Object> createNewAnnonce(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> createNewAnnonce(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) throws Exception{
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
-    
+        Connection connection = null;
         try {
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
             JwtToken jwtToken = new JwtToken();
             String idClient = jwtToken.checkBearer(authorizationHeader, "client");
             PersonneAutentification personneAutentification = new PersonneAutentification(idClient);
             personneAutentification.setAdmin(false);
-            personneAutentification.authentificationByIdAndRole(null);
+            personneAutentification.authentificationByIdAndRole(connection);
             double prix = Double.parseDouble((String) requestBody.get("prix").toString()); 
             String code_annonce = "0000";
             Date annee_fabrication = Date.valueOf((String) requestBody.get("annee_fabrication"));
@@ -87,7 +94,7 @@ public class AnnonceController {
             List<String> equipement_interne = (List<String>) requestBody.get("equipement_interne");
             double commission = Double.parseDouble((String) requestBody.get("commission").toString());
             String[] equipement_interne_tab = equipement_interne.toArray(new String[0]);
-            create(idClient,commission,prix, code_annonce, annee_fabrication, couleur, consommation, categorie_voiture_id, marque_voiture_id, type_carburant_voiture, transmission_voiture, freignage_voiture, equipement_interne_tab);
+            create(connection,idClient,commission,prix, code_annonce, annee_fabrication, couleur, consommation, categorie_voiture_id, marque_voiture_id, type_carburant_voiture, transmission_voiture, freignage_voiture, equipement_interne_tab);
             status = 200;
             titre = "Creation de nouvelle annonce a fait avec succees";
             message = "Excellent , annonce creer";
@@ -100,6 +107,10 @@ public class AnnonceController {
             resultat.put("status", status);
                 resultat.put("titre", titre);
                 resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            } 
         }
     
         return resultat;
@@ -107,14 +118,16 @@ public class AnnonceController {
 
 
     @GetMapping("annonce_valides")
-    public Map<String, Object> getAllAnnonceValide(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Map<String, Object> getAllAnnonceValide(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws Exception {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
         List<VAnnonce> allAnnoncesValides = null;
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPostgres.connectDefault();
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "all");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
@@ -122,7 +135,7 @@ public class AnnonceController {
             personneAutentification.authentificationByIdAndRole(connection);
 
             VAnnonce annoncesV = new VAnnonce();
-            allAnnoncesValides = annoncesV.getAnnoncesValidees(PgConnection.connect());
+            allAnnoncesValides = annoncesV.getAnnoncesValidees(connection);
             status = 200;
             titre = "Prendre tout les validations est fait avec succees";
             message = "Excellent , voici tout les annonces valides";
@@ -134,22 +147,29 @@ public class AnnonceController {
         } finally {
             resultat.put("annoces", allAnnoncesValides);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            } 
         }
+
     
         return resultat;
     }
 
     @GetMapping("annonce_personne_valides/{id_personne}")
-    public Map<String, Object> getAllAnnonceValideByIdClient(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id_personne) {
+    public Map<String, Object> getAllAnnonceValideByIdClient(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id_personne) throws Exception{
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
         List<VAnnonce> allAnnoncesValides = null;
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPostgres.connectDefault();
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
             JwtToken jwtToken = new JwtToken();
             String id = jwtToken.checkBearer(authorizationHeader, "all");
             PersonneAutentification personneAutentification = new PersonneAutentification(id);
@@ -157,7 +177,7 @@ public class AnnonceController {
             personneAutentification.authentificationByIdAndRole(connection); 
 
             VAnnonce annoncesV = new VAnnonce();
-            allAnnoncesValides = annoncesV.getAnnoncesValideesByIdPersonne(id_personne,PgConnection.connect());
+            allAnnoncesValides = annoncesV.getAnnoncesValideesByIdPersonne(id_personne,connection);
             status = 200;
             titre = "Prendre tout les validations est fait avec succees";
             message = "Excellent , voici tout les annonces valides";
@@ -169,29 +189,35 @@ public class AnnonceController {
         } finally {
             resultat.put("annoces", allAnnoncesValides);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;
     }
 
     @GetMapping("annonce_not_valides")
-    public Map<String, Object> getAllAnnonceNotValide(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Map<String, Object> getAllAnnonceNotValide(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws Exception {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
         List<VAnnonce> allAnnoncesValides = null;
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPostgres.connectDefault();
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
             personneAutentification.setAdmin(true);
             personneAutentification.authentificationByIdAndRole(connection);
             VAnnonce annoncesV = new VAnnonce();
-            allAnnoncesValides = annoncesV.getAnnoncesNotValidees(PgConnection.connect());
+            allAnnoncesValides = annoncesV.getAnnoncesNotValidees(connection);
             status = 200;
             titre = "Prendre tout les validations est fait avec succees";
             message = "Excellent , voici tout les annonces valides";
@@ -203,16 +229,18 @@ public class AnnonceController {
         } finally {
             resultat.put("annoces", allAnnoncesValides);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;
     }
    
-    public void create(String perAuth,double commission ,double prix, String code_annonce, Date annee_fabrication, String couleur, double consommation, String categorie_voiture_id, String marque_voiture_id, String type_carburant_voiture_id, String transmission_voiture_id, String freignage_voiture_id , String[] equipement_interne ) throws Exception {
-        Connection connection = null;
-        connection = PgConnection.connect();
+    public void create(Connection connection,String perAuth,double commission ,double prix, String code_annonce, Date annee_fabrication, String couleur, double consommation, String categorie_voiture_id, String marque_voiture_id, String type_carburant_voiture_id, String transmission_voiture_id, String freignage_voiture_id , String[] equipement_interne ) throws Exception {
         connection.setAutoCommit(false);
 
         Voiture voiture = new Voiture(annee_fabrication, couleur, consommation, categorie_voiture_id, marque_voiture_id, type_carburant_voiture_id, transmission_voiture_id, freignage_voiture_id, null);
@@ -249,6 +277,7 @@ public class AnnonceController {
         finally {
             if (!connection.isClosed() && connection != null)
                 connection.close();
+
         }
 
         return bag;
@@ -277,11 +306,14 @@ public class AnnonceController {
         return bag;
     }
 
-    public void CreateAnnonceValidee(String personneAuthId,String annonce_id) throws Exception {
-        Connection connection = null;
+    public void CreateAnnonceValidee(Connection connection ,String personneAuthId,String annonce_id) throws Exception {
+        boolean isExist = false;
         try {
-            connection = PgConnection.connect();
-            connection.setAutoCommit(false);
+            if (connection==null) {
+                connection = ConnectionPostgres.connectDefault();
+                connection.setAutoCommit(false);
+                isExist = true;
+            }
             Date dateValidation = new Date(new java.util.Date().getTime());//date actuel
             AnnonceValidee annonceValidee = new AnnonceValidee(dateValidation, annonce_id, personneAuthId);
             if(annonceValidee.verifyIsExiste(connection)){
@@ -296,27 +328,32 @@ public class AnnonceController {
             throw e;
         }
         finally {
-            if (!connection.isClosed() && connection != null)
+            if (
+                isExist
+            )
+            connection.commit();
                 connection.close();
         }
     }
 
     @GetMapping("commission/{price}")
-    public Map<String, Object> getCommissionByPrice(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String price) {
+    public Map<String, Object> getCommissionByPrice(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String price) throws Exception{
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
         Map<String, Object> donnes = new HashMap<>();
         Commission commission = null;
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPostgres.connectDefault();
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "all");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
             personneAutentification.setAdmin(null);
             personneAutentification.authentificationByIdAndRole(connection);
-            commission = Commission.getCommissionForPrice(Double.parseDouble(price), null);
+            commission = Commission.getCommissionForPrice(Double.parseDouble(price), connection);
            donnes.put("commission", commission);
             status = 200;
             titre = "Prendre le commission est reussi";
@@ -329,29 +366,35 @@ public class AnnonceController {
         } finally {
             resultat.put("data", commission);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;
     }
 
     @GetMapping("/commissions")
-    public Map<String, Object> getAllCommission(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) {
+    public Map<String, Object> getAllCommission(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws Exception {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
         Map<String, Object> donnes = new HashMap<>();  
         Vector<Commission> response = new Vector<>();
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPostgres.connectDefault();
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
             personneAutentification.setAdmin(true);
             personneAutentification.authentificationByIdAndRole(connection);
-            Commission[] commission = Commission.getAllCommissions(null);
+            Commission[] commission = Commission.getAllCommissions(connection);
             for (Commission commission2 : commission) {
                 response.add(commission2);
             }
@@ -367,22 +410,27 @@ public class AnnonceController {
         } finally {
             resultat.put("data", response);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;
     }
     @PostMapping("/commission")
-    public Map<String, Object> createNewCommission(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> createNewCommission(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) throws Exception {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
         Map<String, Object> donnes = new HashMap<>();
-    
+        Connection connection = null;
         try {
-            Connection connection = ConnectionPostgres.connectDefault();
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
@@ -428,8 +476,12 @@ public class AnnonceController {
         } finally {
             resultat.put("data", donnes);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;

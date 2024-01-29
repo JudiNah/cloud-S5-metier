@@ -26,13 +26,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 public class ClientController {
     @PostMapping("/create_compte_client")
-    public Map<String, Object> create_compte_client(@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> create_compte_client(@RequestBody Map<String, Object> requestBody) throws Exception{
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
         String message = null;
         Map<String, Object> donnes = new HashMap<>();
-    
+        Connection connection = null;
         try {
             String name = (String) requestBody.get("name");
             String password = (String) requestBody.get("password");
@@ -50,7 +50,8 @@ public class ClientController {
             Client client = new Client();
             client.setName(name);
             client.setPassword(password);
-            Connection connection = ConnectionPostgres.connectDefault();
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
             if (client.clientisExist(connection)) {
                 throw new Exception("Modifier l'information s'il vous plait");
             }
@@ -68,8 +69,12 @@ public class ClientController {
         } finally {
             resultat.put("data", donnes);
             resultat.put("status", status);
-                resultat.put("titre", titre);
-                resultat.put("message", message);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;
@@ -77,7 +82,7 @@ public class ClientController {
     
     // login client
     @PostMapping("/authentification_client")
-    public Map<String, Object> authentification_client(@RequestBody Map<String, Object> requestBody) {
+    public Map<String, Object> authentification_client(@RequestBody Map<String, Object> requestBody) throws Exception{
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
@@ -85,6 +90,7 @@ public class ClientController {
         Map<String, Object> donnes = new HashMap<>();
         String name = (String) requestBody.get("username");
         String password = (String) requestBody.get("password");
+        Connection connection = null;
         try {
             name = name.trim();
             password = password.trim();
@@ -100,7 +106,8 @@ public class ClientController {
             Client client = new Client();
             client.setName(name);
             client.setPassword(password);
-            Connection connection = ConnectionPostgres.connectDefault();
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
             client.connect(connection);
 
             // si le connection est reussi
@@ -144,6 +151,10 @@ public class ClientController {
             resultat.put("status", status);
             resultat.put("titre", titre);
             resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
         }
     
         return resultat;

@@ -45,9 +45,7 @@ public class CategorieVoiture {
 
     public List<CategorieVoiture> read(Connection connection) throws Exception {
         List<CategorieVoiture> categorieVoitureList = new ArrayList<>();
-        if (connection==null) {
-            connection = ConnectionPostgres.connectDefault();
-        }
+        
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery("SELECT *FROM categorie_voiture");
         while (rs.next()) {
