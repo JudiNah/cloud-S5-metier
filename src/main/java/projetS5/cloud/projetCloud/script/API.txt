@@ -45,7 +45,7 @@
                         }
                         
             - type carburant
-                . url : /types-carburant
+                . url : /type-carburant
                 . data : {
                             "nom":"new type carburant"
                         }
@@ -55,7 +55,7 @@
                             "nom":"new transmission tk"
                         }
             - freinages
-                . url : /freinages
+                . url : /freinage
                 . data : {
                             "nom":"new freinage tk"
                         }
