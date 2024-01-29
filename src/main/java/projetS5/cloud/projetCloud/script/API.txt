@@ -95,7 +95,7 @@
                             "nom":"old transmission"
                         }
             - freinage 
-                . url : /freinage/TRSM0006
+                . url : /freinage/FRGN0006
                 . data : {
                             "nom":"old transmission"
                         }
