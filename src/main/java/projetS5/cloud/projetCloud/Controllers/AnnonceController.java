@@ -328,11 +328,10 @@ public class AnnonceController {
             throw e;
         }
         finally {
-            if (
-                isExist
-            )
-            connection.commit();
+            if (isExist){
+                connection.commit();
                 connection.close();
+            }
         }
     }
 
