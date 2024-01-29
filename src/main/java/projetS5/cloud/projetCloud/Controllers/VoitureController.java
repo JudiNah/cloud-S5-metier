@@ -44,6 +44,7 @@ public class VoitureController {
         Connection connection = null;
         try {
         connection = ConnectionPostgres.connectDefault();
+        connection.setAutoCommit(false);
         JwtToken jwtToken = new JwtToken();
         String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
         PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
