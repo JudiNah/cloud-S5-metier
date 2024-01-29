@@ -166,10 +166,10 @@
     . url : /client
     . method : post
     . data : {
-                "email": "judi@email.com",
-                "password": "judimdp",
-                "nom": "Judi",
-                "prenom": "Cael",
+                "email": "vaikanet@client.com",
+                "password": "client",
+                "nom": "Jhons",
+                "prenom": "CL",
                 "address": "Iavoloha",
                 "telephone": "0323456787",
                 "sexe": 1,  
@@ -199,7 +199,7 @@
             "transmission_voiture": "TRSM0001",
             "freignage_voiture": "FRGN0002",
             "equipement_interne": ["EQP_IN0001", "EQP_IN0002", "EQP_IN0003"],
-            "commission":35000
+            "commission":30
             }
     .token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0b2tlblZhaWthTmV0Iiwicm9sZSI6ImNsaWVudCIsImlkIjoiUEVSX0FUMDAwNSIsImV4cCI6MTcwNjYxMTU4M30.vqewNYT0qY2qzmrAwBfuRdVONe0i3XwSzLXJCntz4ro
 

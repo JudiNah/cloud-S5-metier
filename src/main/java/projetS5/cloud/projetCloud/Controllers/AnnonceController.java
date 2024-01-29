@@ -93,6 +93,7 @@ public class AnnonceController {
             String freignage_voiture = (String) requestBody.get("freignage_voiture");
             List<String> equipement_interne = (List<String>) requestBody.get("equipement_interne");
             double commission = Double.parseDouble((String) requestBody.get("commission").toString());
+            commission = (commission*prix)/100;
             String[] equipement_interne_tab = equipement_interne.toArray(new String[0]);
             create(connection,idClient,commission,prix, code_annonce, annee_fabrication, couleur, consommation, categorie_voiture_id, marque_voiture_id, type_carburant_voiture, transmission_voiture, freignage_voiture, equipement_interne_tab);
             status = 200;
