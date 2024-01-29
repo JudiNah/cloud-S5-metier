@@ -161,6 +161,17 @@
             }
         . token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0b2tlblZhaWthTmV0Iiwicm9sZSI6ImFkbWluIiwiaWQiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NjEzNjI2fQ.MksxFJ0FZAWeallqPoE3h7_mUcbD3q4cbt2RvGM3GnQ
 
+7 . Statistique
+    utilisateur par mois 
+        ./state-utilisateur/2024
+    annonce par mois
+        ./state-annonce/2024
+    vente par mois
+        ./state-vente/2024
+
+    method : get
+    token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0b2tlblZhaWthTmV0Iiwicm9sZSI6ImFkbWluIiwiaWQiOiJQRVJfQVQwMDAyIiwiZXhwIjoxNzA2NjEzNjI2fQ.MksxFJ0FZAWeallqPoE3h7_mUcbD3q4cbt2RvGM3GnQ
+
 ------------ CLIENT ----------------------
 1 .creation compte client
     . url : /client
@@ -203,4 +214,10 @@
             }
     .token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0b2tlblZhaWthTmV0Iiwicm9sZSI6ImNsaWVudCIsImlkIjoiUEVSX0FUMDAwNSIsImV4cCI6MTcwNjYxMTU4M30.vqewNYT0qY2qzmrAwBfuRdVONe0i3XwSzLXJCntz4ro
 
-
+4 .acheter voiture
+    . url /achete_voiture
+    . method : post
+    . data : {
+                "id_annonce": "ANNC0019"
+            }
+    .token_autorise_new : eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0b2tlblZhaWthTmV0Iiwicm9sZSI6ImNsaWVudCIsImlkIjoiUEVSX0FUMDAwNSIsImV4cCI6MTcwNjYxMTU4M30.vqewNYT0qY2qzmrAwBfuRdVONe0i3XwSzLXJCntz4ro
