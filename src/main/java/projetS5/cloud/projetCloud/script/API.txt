@@ -190,7 +190,7 @@
     . data : {
             "prix": 12000.0,
             "code_annonce": "0000",
-            "annee_fabrication": "2022-01-24",
+            "annee_fabrication": "2021-06-24",
             "couleur": "45ef33",
             "consommation": 8.5, 
             "categorie_voiture_id": "CAT0001",
