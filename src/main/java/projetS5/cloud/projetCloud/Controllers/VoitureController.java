@@ -116,7 +116,7 @@ public class VoitureController {
         try {
             connection = PgConnection.connect();
             JwtToken jwtToken = new JwtToken();
-            String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "all");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
             personneAutentification.setAdmin(null);
             personneAutentification.authentificationByIdAndRole(connection);
