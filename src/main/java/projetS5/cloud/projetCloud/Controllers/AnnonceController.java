@@ -285,6 +285,47 @@ public class AnnonceController {
     
         return resultat;
     }
+
+    @GetMapping("annonce/{motcle}")
+    public Map<String, Object> rechercheMultiCritere(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String motcle) throws Exception {
+        Map<String, Object> resultat = new HashMap<>();
+        int status = 0;
+        String titre = null;
+        String message = null;
+        List<VAnnonce> allAnnoncesValides = null;
+        Connection connection = null;
+        try {
+
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
+            JwtToken jwtToken = new JwtToken();
+            String idAdmin = jwtToken.checkBearer(authorizationHeader, "client");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
+            personneAutentification.setAdmin(false);
+            personneAutentification.authentificationByIdAndRole(connection);
+            VAnnonce annoncesV = new VAnnonce();
+            allAnnoncesValides = annoncesV.searchAnnonceByMotCle(motcle,connection);
+            status = 200;
+            titre = "Prendre tout les validations est fait avec succees";
+            message = "Excellent , voici tout les annonces valides";
+        } catch (Exception e) {
+            status = 500;
+            titre = "Prendre les annonces valides a echoue";
+            message = e.getMessage();
+            e.printStackTrace();
+        } finally {
+            resultat.put("annoces", allAnnoncesValides);
+            resultat.put("status", status);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
+        }
+    
+        return resultat;
+    }
    
     public void create(Connection connection,String perAuth,double commission ,double prix, String code_annonce, Date annee_fabrication, String couleur, double consommation, String categorie_voiture_id, String marque_voiture_id, String type_carburant_voiture_id, String transmission_voiture_id, String freignage_voiture_id , String[] equipement_interne ) throws Exception {
         connection.setAutoCommit(false);
