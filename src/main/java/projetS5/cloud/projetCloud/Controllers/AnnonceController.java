@@ -65,6 +65,51 @@ public class AnnonceController {
     
         return resultat;
     }
+
+    @PostMapping("achete_voiture")
+    public Map<String, Object> acheterVoiture(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) throws Exception {
+        Map<String, Object> resultat = new HashMap<>();
+        int status = 0;
+        String titre = null;
+        String message = null;
+        Connection connection = null;
+        try {
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
+            JwtToken jwtToken = new JwtToken();
+            String idClient = jwtToken.checkBearer(authorizationHeader, "client");
+            PersonneAutentification personneAutentification = new PersonneAutentification(idClient);
+            personneAutentification.setAdmin(false);
+            personneAutentification.authentificationByIdAndRole(connection);
+
+            String annonce_id = (String) requestBody.get("id_annonce"); 
+            Date dateNow = new Date(new java.util.Date().getTime());
+            Annonce annonce = new Annonce();
+            annonce.setAnnonceId(annonce_id);
+            annonce.setPersonneAutentificationId(idClient);
+            annonce.setDateFin(dateNow);
+            annonce.acheterVoiture(connection);
+            annonce.addDateFinAnnonce(connection);
+            status = 200;
+            titre = "Achat de voiture effectue";
+            message = "Excellent , vous avez acheter une voiture";
+        } catch (Exception e) {
+            status = 500;
+            titre = "Achat de voiture echoue";
+            message = e.getMessage();
+            e.printStackTrace();
+        } finally {
+            resultat.put("status", status);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }   
+        }
+    
+        return resultat;
+    }
     
     @PostMapping("annonce")
     public Map<String, Object> createNewAnnonce(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) throws Exception{

@@ -118,7 +118,7 @@ public class Annonce {
     }
 
     public void acheterVoiture(Connection connection) throws Exception{
-        String sql = "INSERT INTO vente( date , id_annonce , personne_autentification_id) VALUES(?, ?, ?)";
+        String sql = "INSERT INTO vente( prix_vente , prix_final , taux_commission ,taux_remise , date , id_annonce , personne_autentification_id) VALUES(0 , 0 ,0 ,0 ,?, ?, ?)";
         PreparedStatement prstmt = connection.prepareStatement(sql);
         prstmt.setDate(1, getDateFin());
         prstmt.setString(2, getAnnonceId());
@@ -126,7 +126,7 @@ public class Annonce {
         prstmt.executeUpdate();
     }
     public void addDateFinAnnonce(Connection connection) throws Exception{
-        String sql = "update table annonce set date_fin = ? where id = ?";
+        String sql = "update annonce set date_fin = ? where id = ?";
         PreparedStatement prstmt = connection.prepareStatement(sql);
         prstmt.setDate(1, getDateFin());
         prstmt.setString(2, getAnnonceId());
