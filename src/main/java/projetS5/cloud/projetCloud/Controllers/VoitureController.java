@@ -48,7 +48,7 @@ public class VoitureController {
         JwtToken jwtToken = new JwtToken();
         String idAdmin = jwtToken.checkBearer(authorizationHeader, "all");
         PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
-        personneAutentification.setAdmin(true);
+        personneAutentification.setAdmin(null);
         personneAutentification.authentificationByIdAndRole(connection);
         System.out.println(idAdmin);
         donne.add("categories");
@@ -89,7 +89,7 @@ public class VoitureController {
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "all");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
-            personneAutentification.setAdmin(true);
+            personneAutentification.setAdmin(null);
             personneAutentification.authentificationByIdAndRole(connection);
             List<CategorieVoiture> categorieVoitureList = new CategorieVoiture().read(connection);
             bag = new Bag(null, null, categorieVoitureList);
@@ -118,7 +118,7 @@ public class VoitureController {
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "admin");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
-            personneAutentification.setAdmin(true);
+            personneAutentification.setAdmin(null);
             personneAutentification.authentificationByIdAndRole(connection);
             List<MarqueVoiture> marqueVoitureList = new MarqueVoiture().read(connection);
             bag = new Bag(null, null, marqueVoitureList);
@@ -143,7 +143,7 @@ public class VoitureController {
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "all");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
-            personneAutentification.setAdmin(true);
+            personneAutentification.setAdmin(null);
             personneAutentification.authentificationByIdAndRole(connection);
             List<TypeCarburantVoiture> typeCarburantVoitureList = new TypeCarburantVoiture().read(connection);
             bag = new Bag(null, null, typeCarburantVoitureList);
@@ -168,7 +168,7 @@ public class VoitureController {
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "all");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
-            personneAutentification.setAdmin(true);
+            personneAutentification.setAdmin(null);
             personneAutentification.authentificationByIdAndRole(connection);
             List<TransmissionVoiture> transmissionVoitureList = new TransmissionVoiture().read(connection);
             bag = new Bag(null, null, transmissionVoitureList);
@@ -194,7 +194,7 @@ public class VoitureController {
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "all");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
-            personneAutentification.setAdmin(true);
+            personneAutentification.setAdmin(null);
             personneAutentification.authentificationByIdAndRole(connection);
             List<FreignageVoiture> freignageVoitureList = new FreignageVoiture().read(connection);
             bag = new Bag(null, null, freignageVoitureList);
@@ -219,7 +219,7 @@ public class VoitureController {
             JwtToken jwtToken = new JwtToken();
             String idAdmin = jwtToken.checkBearer(authorizationHeader, "all");
             PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
-            personneAutentification.setAdmin(true);
+            personneAutentification.setAdmin(null);
             personneAutentification.authentificationByIdAndRole(connection);
             List<EquipementInterne> equipementInterneList = new EquipementInterne().read(connection);
             bag = new Bag(null, null, equipementInterneList);
