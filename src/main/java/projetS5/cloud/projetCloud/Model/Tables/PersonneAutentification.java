@@ -402,6 +402,62 @@ public class PersonneAutentification extends Personne{
     }
 
 
+    public PersonneAutentification getAuthentificationPersonneById(Connection connection) throws Exception{
+        String query = "select * from personne_autentification where id=? and is_admin=?";
+        
+        String id = "";
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+        boolean statementOpen = false;
+        boolean resultSetOpen = false;
+        boolean closeable = false;
+        boolean exist = false;
+        PersonneAutentification prauth = null;
+        try {
+            if (connection == null) {
+                connection = ConnectionPostgres.connectDefault();
+                connection.setAutoCommit(false);
+                closeable = true;
+            }
 
+            statement = connection.prepareStatement(query);
+            statement.setString(1, this.getId());
+            statement.setBoolean(2, this.getAdmin());  
+
+            statementOpen = true;
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                prauth = new PersonneAutentification(
+                resultSet.getString("id"),
+                resultSet.getString("email"),
+                resultSet.getString("mot_passe"),
+                resultSet.getBoolean("is_admin"),
+                new Personne().getPersonne(connection, resultSet.getString("personne_id"))
+            );
+            exist = true;
+            }
+            if (!exist) {
+                throw new Exception("Personne invalide");
+            }
+
+            statement.close();
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            if (statementOpen) {
+                statement.close();
+            }
+            if (resultSetOpen) {
+                resultSet.close();
+            }
+            if (closeable) {
+                connection.commit();
+                connection.close();
+            }
+        }
+
+        return prauth;
+    }
 
 }

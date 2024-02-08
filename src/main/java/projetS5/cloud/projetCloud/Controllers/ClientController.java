@@ -11,16 +11,23 @@ import projetS5.cloud.projetCloud.Model.Entities.Admin;
 import projetS5.cloud.projetCloud.Model.Objects.Client;
 import projetS5.cloud.projetCloud.Model.Tables.Personne;
 import projetS5.cloud.projetCloud.Model.Tables.PersonneAutentification;
+import projetS5.cloud.projetCloud.Model.Utils.JwtToken;
+import projetS5.cloud.projetCloud.Model.Views.VAnnonce;
 
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 
 @RestController
@@ -253,6 +260,46 @@ public class ClientController {
         } else {
             throw new Exception(key + " invalide");
         }
+    }
+
+    @GetMapping("connect_token")
+    public Map<String, Object> getAllAnnonceValideByIdClient(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws Exception{
+        Map<String, Object> resultat = new HashMap<>();
+        int status = 0;
+        String titre = null;
+        String message = null;
+        Connection connection = null;
+        try {
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
+            JwtToken jwtToken = new JwtToken();
+            String id = jwtToken.checkBearer(authorizationHeader, "client");
+            PersonneAutentification personneAutentification = new PersonneAutentification(id);
+            personneAutentification.setAdmin(null);
+            personneAutentification.authentificationByIdAndRole(connection); 
+            personneAutentification.setAdmin(false);
+            personneAutentification = personneAutentification.getAuthentificationPersonneById(connection);
+            resultat.put("personne", personneAutentification);
+
+            status = 200;
+            titre = "Connection avec le token est fait avec succees";
+            message = "Excellent ,vous etes connecter";
+        } catch (Exception e) {
+            status = 500;
+            titre = "Vous n'etes pas connecter";
+            message = e.getMessage();
+            e.printStackTrace();
+        } finally {
+            resultat.put("status", status);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
+        }
+    
+        return resultat;
     }
 
 }
