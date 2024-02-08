@@ -174,12 +174,6 @@ public class AnnonceController {
         try {
             connection = ConnectionPostgres.connectDefault();
             connection.setAutoCommit(false);
-            JwtToken jwtToken = new JwtToken();
-            String idAdmin = jwtToken.checkBearer(authorizationHeader, "all");
-            PersonneAutentification personneAutentification = new PersonneAutentification(idAdmin);
-            personneAutentification.setAdmin(null);
-            personneAutentification.authentificationByIdAndRole(connection);
-
             VAnnonce annoncesV = new VAnnonce();
             allAnnoncesValides = annoncesV.getAnnoncesValidees(connection);
             status = 200;
