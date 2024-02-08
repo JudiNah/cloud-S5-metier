@@ -200,6 +200,80 @@ public class AnnonceController {
         return resultat;
     }
 
+    @GetMapping("annonce_valides_recent")
+    public Map<String, Object> getAllAnnonceValideRecent() throws Exception {
+        Map<String, Object> resultat = new HashMap<>();
+        int status = 0;
+        String titre = null;
+        String message = null;
+        List<VAnnonce> allAnnoncesValides = null;
+        Connection connection = null;
+        try {
+        
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
+            VAnnonce annoncesV = new VAnnonce();
+            allAnnoncesValides = annoncesV.getAnnoncesValideesRecent(connection);
+            status = 200;
+            titre = "Prendre tout les validations est fait avec succees";
+            message = "Excellent , voici tout les annonces valides";
+        } catch (Exception e) {
+            status = 500;
+            titre = "Prendre les annonces valides a echoue";
+            message = e.getMessage();
+            e.printStackTrace();
+        } finally {
+            resultat.put("annoces", allAnnoncesValides);
+            resultat.put("status", status);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            } 
+        }
+
+    
+        return resultat;
+    }
+
+    @GetMapping("annonce_valides_moin_chere")
+    public Map<String, Object> getAllAnnonceValideMoinChere() throws Exception {
+        Map<String, Object> resultat = new HashMap<>();
+        int status = 0;
+        String titre = null;
+        String message = null;
+        List<VAnnonce> allAnnoncesValides = null;
+        Connection connection = null;
+        try {
+        
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
+            VAnnonce annoncesV = new VAnnonce();
+            allAnnoncesValides = annoncesV.getAnnoncesValideesMoinChere(connection);
+            status = 200;
+            titre = "Prendre tout les validations est fait avec succees";
+            message = "Excellent , voici tout les annonces valides";
+        } catch (Exception e) {
+            status = 500;
+            titre = "Prendre les annonces valides a echoue";
+            message = e.getMessage();
+            e.printStackTrace();
+        } finally {
+            resultat.put("annoces", allAnnoncesValides);
+            resultat.put("status", status);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            } 
+        }
+
+    
+        return resultat;
+    }
+
     @GetMapping("annonce_personne_valides/{id_personne}")
     public Map<String, Object> getAllAnnonceValideByIdClient(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@PathVariable String id_personne) throws Exception{
         Map<String, Object> resultat = new HashMap<>();
