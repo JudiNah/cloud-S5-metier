@@ -164,7 +164,7 @@ public class AnnonceController {
 
 
     @GetMapping("annonce_valides")
-    public Map<String, Object> getAllAnnonceValide(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws Exception {
+    public Map<String, Object> getAllAnnonceValide() throws Exception {
         Map<String, Object> resultat = new HashMap<>();
         int status = 0;
         String titre = null;
@@ -172,6 +172,7 @@ public class AnnonceController {
         List<VAnnonce> allAnnoncesValides = null;
         Connection connection = null;
         try {
+        
             connection = ConnectionPostgres.connectDefault();
             connection.setAutoCommit(false);
             VAnnonce annoncesV = new VAnnonce();
