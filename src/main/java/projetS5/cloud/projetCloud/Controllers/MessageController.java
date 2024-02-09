@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -64,8 +65,8 @@ public class MessageController {
     @Autowired
     private MessageService messageService;
 
-    @GetMapping("/messages")
-    public ResponseEntity<List<Message>>  obtenirDerniersMessagesParIdReceive(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) throws Exception{
+    @GetMapping("/message/{id}")
+    public ResponseEntity<List<Message>>  obtenirDerniersMessagesParIdReceive(@PathVariable String id,@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) throws Exception{
         int status = 0;
         String titre = null;
         Connection connection = null;
@@ -80,7 +81,7 @@ public class MessageController {
             personneAutentification.setAdmin(false);
             personneAutentification.authentificationByIdAndRole(connection);
             personneAutentification = personneAutentification.getAuthentificationPersonneById(connection);
-            String idClient2 = (String) requestBody.get("id");
+            String idClient2 = id;
             messages = messageService.findAllMessagesBetweenIdsSortedByDate(idClient, idClient2);
             if (messages.isEmpty()) {
                 return ResponseEntity.noContent().build();
