@@ -40,8 +40,8 @@ public class MessageController {
             PersonneAutentification personneAutentification = new PersonneAutentification(idClient);
             personneAutentification.setAdmin(false);
             personneAutentification.authentificationByIdAndRole(connection);
-            
-            message.setIdsender(idClient);
+            personneAutentification = personneAutentification.getAuthentificationPersonneById(connection);
+            message.setIdsender(personneAutentification.getPersonne().getId());
             message.setIdReceive((String) requestBody.get("idReceive"));
             message.setTexto((String) requestBody.get("texto"));
             
