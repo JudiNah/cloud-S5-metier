@@ -80,12 +80,11 @@ public class MessageController {
             personneAutentification.setAdmin(false);
             personneAutentification.authentificationByIdAndRole(connection);
             personneAutentification = personneAutentification.getAuthentificationPersonneById(connection);
-            String idClientvrai = personneAutentification.getPersonne().getId();
             String idClient2 = (String) requestBody.get("id");
-            messages = messageService.findAllMessagesBetweenIdsSortedByDate(idClientvrai, idClient2);
+            messages = messageService.findAllMessagesBetweenIdsSortedByDate(idClient, idClient2);
             if (messages.isEmpty()) {
                 return ResponseEntity.noContent().build();
-            }            
+            }    
         } catch (Exception e) {
             
             e.printStackTrace();
