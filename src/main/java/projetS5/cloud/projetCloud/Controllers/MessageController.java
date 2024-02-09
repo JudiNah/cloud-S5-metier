@@ -66,7 +66,7 @@ public class MessageController {
     private MessageService messageService;
 
     @GetMapping("/message/{id}")
-    public ResponseEntity<List<Message>>  obtenirDerniersMessagesParIdReceive(@PathVariable String id,@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) throws Exception{
+    public ResponseEntity<List<Message>>  obtenirDerniersMessagesParIdReceive(@PathVariable String id,@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws Exception{
         int status = 0;
         String titre = null;
         Connection connection = null;
