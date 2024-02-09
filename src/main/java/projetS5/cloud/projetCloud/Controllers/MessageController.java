@@ -45,12 +45,11 @@ public class MessageController {
             personneAutentification.setAdmin(false);
             personneAutentification.authentificationByIdAndRole(connection);
             personneAutentification = personneAutentification.getAuthentificationPersonneById(connection);
-            message.setIdsender(personneAutentification.getPersonne().getId());
+            message.setIdsender(idClient);
             message.setIdReceive((String) requestBody.get("idReceive"));
             message.setTexto((String) requestBody.get("texto"));
-            
+           
         } catch (Exception e) {
-            
             e.printStackTrace();
         } finally {
 
@@ -66,7 +65,7 @@ public class MessageController {
     private MessageService messageService;
 
     @GetMapping("/messages")
-    public ResponseEntity<List<Message>>  obtenirDerniersMessagesParIdReceive(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader) throws Exception{
+    public ResponseEntity<List<Message>>  obtenirDerniersMessagesParIdReceive(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader,@RequestBody Map<String, Object> requestBody) throws Exception{
         int status = 0;
         String titre = null;
         Connection connection = null;
@@ -82,13 +81,11 @@ public class MessageController {
             personneAutentification.authentificationByIdAndRole(connection);
             personneAutentification = personneAutentification.getAuthentificationPersonneById(connection);
             String idClientvrai = personneAutentification.getPersonne().getId();
-            messages = messageService.findLastMessagesForId(idClientvrai);
+            String idClient2 = (String) requestBody.get("id");
+            messages = messageService.findAllMessagesBetweenIdsSortedByDate(idClientvrai, idClient2);
             if (messages.isEmpty()) {
                 return ResponseEntity.noContent().build();
-            }
-
-            
-            
+            }            
         } catch (Exception e) {
             
             e.printStackTrace();
@@ -99,9 +96,7 @@ public class MessageController {
                 connection.close();
             }   
         }
-        // Remplacer "idClient" par le véritable idClient obtenu à partir de l'authentification
-        
-        // Requête pour obtenir les derniers messages pour chaque idReceive lorsque l'idsender est égal à idClient
+
         
         return ResponseEntity.ok(messages);
     }
