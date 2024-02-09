@@ -79,6 +79,7 @@ public class PersonneAutentification extends Personne{
         this.setAdmin(isAdmin);
         this.setPersonne(personne);
     }
+    public PersonneAutentification(){}
 
     public List<PersonneAutentification> getUtilisateurs (Connection connection) throws SQLException {
         List<PersonneAutentification> prsauths = new ArrayList<>();

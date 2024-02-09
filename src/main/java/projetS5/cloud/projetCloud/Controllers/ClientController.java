@@ -302,4 +302,39 @@ public class ClientController {
         return resultat;
     }
 
+    @GetMapping("clients")
+    public Map<String, Object> getAllClient() throws Exception{
+        Map<String, Object> resultat = new HashMap<>();
+        int status = 0;
+        String titre = null;
+        String message = null;
+        Connection connection = null;
+        try {
+            connection = ConnectionPostgres.connectDefault();
+            connection.setAutoCommit(false);
+            PersonneAutentification personneAutentification = new PersonneAutentification();
+            personneAutentification.setAdmin(false);
+            List<PersonneAutentification> personneAutentifications = personneAutentification.getUtilisateurs(connection);
+            resultat.put("personnes", personneAutentifications);
+            status = 200;
+            titre = "Connection avec le token est fait avec succees";
+            message = "Excellent ,vous etes connecter";
+        } catch (Exception e) {
+            status = 500;
+            titre = "Vous n'etes pas connecter";
+            message = e.getMessage();
+            e.printStackTrace();
+        } finally {
+            resultat.put("status", status);
+            resultat.put("titre", titre);
+            resultat.put("message", message);
+            if (!(connection==null)) {
+                connection.commit();
+                connection.close();
+            }
+        }
+    
+        return resultat;
+    }
+
 }

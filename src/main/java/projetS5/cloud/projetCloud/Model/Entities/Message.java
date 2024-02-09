@@ -64,6 +64,7 @@ public class Message {
         this.timeSend = LocalDateTime.now().toLocalTime().toString();
         this.etat =  5;
     }
+    
 
     // Constructeurs, getters et setters
 }
